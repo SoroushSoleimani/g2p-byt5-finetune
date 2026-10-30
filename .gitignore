@@ -1,0 +1,26 @@
+# Python virtual environment
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Local archives and root temporary audio
+*.zip
+/*.wav
+
+# Kaggle temporary outputs & credentials
+kaggle_output/
+kaggle_kernel/
+test_init/
+*.tmp
+checkpoints/
+g2p_byt5_finetuned/
+finetuned_byt5_g2p_model/
+
+# Third party cloned repos
+CharsiuG2P/
+
+# OS specific files
+.DS_Store
+Thumbs.db
