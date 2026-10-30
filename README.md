@@ -115,9 +115,11 @@ In the pretrained baseline (Figure 7A), the short vowels `/e/` and `/o/` suffere
 
 ---
 
-## Qualitative Word-Level & Audio Waveform Comparison (`34` `.wav` Files)
+## Qualitative Word-Level & Audio Waveform Comparison (`46` `.wav` Files + Interactive HTML Player)
 
-The `audio_comparison/` directory contains **34 Persian `.wav` files** synthesized with Microsoft Edge neural TTS (`fa-IR-FaridNeural`) representing the phonological improvements before and after fine-tuning:
+The `audio_comparison/` directory contains **46 Persian `.wav` files** (23 comparison pairs) synthesized with Microsoft Edge neural TTS (`fa-IR-FaridNeural`) representing the phonological improvements before and after fine-tuning.
+
+An interactive, zero-dependency HTML audio player is available at [`audio_player.html`](audio_player.html), allowing users to audition every Before vs. After audio pair directly in any modern browser.
 
 | Persian Input | Category | Ground Truth IPA | Pretrained Baseline (Before) | Fine-Tuned ByT5 (After) | Status |
 | :--- | :--- | :--- | :--- | :--- | :---: |
@@ -146,6 +148,7 @@ The `audio_comparison/` directory contains **34 Persian `.wav` files** synthesiz
 ├── g2p_implementation_and_finetune.ipynb   # Comprehensive 19-cell Jupyter/Kaggle Notebook executed on Tesla T4 GPU
 ├── finetune_g2p.py                         # Standalone training & 9-metric evaluation script
 ├── evaluation_metrics.json                 # Complete empirical metrics exported directly from Kaggle GPU run
+├── audio_player.html                       # Standalone interactive HTML player for Before/After audio pairs
 ├── data/
 │   ├── persian_g2p_train_expanded.tsv      # 8,559 training instances (7,149 Wiktionary + 235x6 Curated)
 │   ├── persian_g2p_dev.tsv                 # 75 validation instances (50 Wiktionary + 25 Curated)
@@ -161,13 +164,14 @@ The `audio_comparison/` directory contains **34 Persian `.wav` files** synthesiz
 │   ├── vowel_confusion_matrix.png
 │   ├── word_edit_distance_reduction.png
 │   └── g2p_byt5_architecture.png
-├── audio_comparison/                       # 34 Persian .wav audio files (Before vs. After Fine-Tuning)
+├── audio_comparison/                       # 46 Persian .wav audio files (Before vs. After Fine-Tuning)
 ├── scripts/
 │   ├── build_expanded_dataset.py           # Builds 8,559-pair dataset with strict leakage assertions
 │   ├── heldout_challenge_set.py            # Clean 60-word held-out challenge benchmark definitions
 │   ├── create_notebook.py                  # Generates the 19-cell benchmark notebook
 │   ├── generate_charts.py                  # Generates all 9 300-DPI figures from evaluation_metrics.json
-│   ├── generate_audio_comparison.py        # Synthesizes all 34 Persian .wav files via neural TTS
+│   ├── generate_audio_comparison.py        # Synthesizes comparative Persian .wav files via neural TTS
+│   ├── build_audio_player_html.py          # Builds standalone interactive HTML audio comparison player
 │   └── push_to_kaggle.py                   # Automated Kaggle GPU kernel deployment script
 └── requirements.txt                        # Python dependencies
 ```
