@@ -40,7 +40,8 @@ def main():
         m = json.load(f)
 
     # 1. Figure 1: Dataset Distribution (EDA)
-    train_path = os.path.join(BASE_DIR, "data", "persian_g2p_train_expanded.tsv")
+    kaamel_path = os.path.join(BASE_DIR, "data", "persian_g2p_train_kaamel.tsv")
+    train_path = kaamel_path if os.path.exists(kaamel_path) else os.path.join(BASE_DIR, "data", "persian_g2p_train_expanded.tsv")
     unique_pairs = {}
     with open(train_path, "r", encoding="utf-8") as f:
         for line in f:

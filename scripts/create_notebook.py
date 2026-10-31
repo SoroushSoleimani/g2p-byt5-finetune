@@ -1,36 +1,32 @@
 #!/usr/bin/env python3
 """
-Generates the Comprehensive Large-Scale Persian (Farsi) G2P Fine-Tuning Jupyter Notebook.
-Includes 8,559 training samples, dual benchmarks (500-word Wiktionary + 60-word Held-Out Challenge),
-9 phonetic evaluation metrics, and 9 publication-quality 300 DPI visualizations.
-All text is 100% in professional English with zero emojis.
+Generates the Complete 19-Cell Persian G2P Large-Scale Fine-Tuning Jupyter Notebook
+with MahtaFetrat/KaamelDict (116K+ words), CharsiuG2P, ByT5, 9 Evaluation Metrics,
+and 9 Publication-Grade Figures at 300 DPI.
 """
 
-import json
 import os
+import re
+import sys
+import json
 
 notebook = {
     "cells": [],
     "metadata": {
         "kernelspec": {
-            "display_name": "Python 3 (ipykernel)",
+            "display_name": "Python 3",
             "language": "python",
             "name": "python3"
         },
         "language_info": {
-            "codemirror_mode": {"name": "ipython", "version": 3},
-            "file_extension": ".py",
-            "mimetype": "text/x-python",
             "name": "python",
-            "nbconvert_exporter": "python",
-            "pygments_lexer": "ipython3",
-            "version": "3.10.12"
-        }
+            "version": "3.10"
+        },
+        "accelerator": "GPU"
     },
     "nbformat": 4,
-    "nbformat_minor": 4
+    "nbformat_minor": 5
 }
-
 
 import sys as _sys
 _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -47,9 +43,9 @@ def _fmt_dict(name, d, comment):
     return "\n".join(lines)
 
 DATA_LISTS_SRC = "\n\n".join([
-    _fmt_dict("DOMAIN_SEED_SET", _SEED, "1. Domain seed lexicon (60 words, 4 categories) -- used for TRAINING only"),
-    "# 2. Additional curated lexicon (200 entries); entries [:25] are reserved for validation\nADDITIONAL_CURATED_LEXICON = [\n" + "\n".join(f"    {tuple(it)!r}," for it in _CUR) + "\n]",
-    _fmt_dict("HELDOUT_CHALLENGE_SET", _HELD, "3. Held-out challenge set (60 words, 4 categories) -- never used for training or validation"),
+    _fmt_dict("DOMAIN_SEED_SET", _SEED, "1. Curated AI & Technical Domain Seed Lexicon (60 words across 4 categories)"),
+    "# 2. Additional Curated AI & Technical Loanword Lexicon (190 words)\nADDITIONAL_CURATED_LEXICON = [\n" + "\n".join(f"    {tuple(it)!r}," for it in _CUR) + "\n]",
+    _fmt_dict("HELDOUT_CHALLENGE_SET", _HELD, "3. Held-Out Stratified Challenge Suite (60 words across 4 categories, 100% unseen)"),
 ])
 
 def add_md(source):
@@ -70,23 +66,23 @@ def add_code(source):
     })
 
 # --- CELL 1: Title & Overview ---
-add_md("""# Large-Scale Persian (Farsi) Grapheme-to-Phoneme (G2P) Fine-Tuning & Comprehensive Benchmark Suite
-### Built on [CharsiuG2P (Interspeech 2022)](https://github.com/lingjzhu/CharsiuG2P) & Byte-Level Transformer Seq2Seq (`ByT5`)
+add_md("""# Large-Scale Persian (Farsi) Grapheme-to-Phoneme (G2P) Fine-Tuning on KaamelDict (116K+ Words) & Comprehensive Benchmark Suite
+### Built on [CharsiuG2P (Interspeech 2022)](https://github.com/lingjzhu/CharsiuG2P), [KaamelDict (Fetrat et al.)](https://huggingface.co/datasets/MahtaFetrat/KaamelDict), and Byte-Level Transformer Seq2Seq (`ByT5`)
 
 ---
 
 ### Executive Summary & Architectural Scope
-**Grapheme-to-Phoneme (G2P)** conversion maps orthographic text sequences into International Phonetic Alphabet (IPA) representations. For the **Persian (Farsi)** language (`<fas>`), neural G2P modeling faces four core linguistic challenges:
-1. **Unvocalized Short Vowels (Diacritic Omission)**: Standard Persian script omits short vowels (`/æ/` Fathe, `/e/` Kasre, `/o/` Zamme), causing severe homographic and phonotactic ambiguity.
-2. **Compound Words & Ezafe Morphophonemics**: Unwritten enclitic vowels (`-e` after consonants, `-je` after vowels) link noun-modifier constructions.
-3. **Gemination (Tashdid) & Glottal Stops (Hamza / Ayn)**: Arabic-derived morphological templates (`تَفَعُّل`, `مُفَعَّل`, `اِفتِعال`) feature doubled consonants and glottal stops (`/ʔ/`) that generic multilingual models frequently drop.
-4. **Modern AI, Computing & Technical Loanwords**: Rapidly evolving technical terminology (*Algorithm, PyTorch, TensorFlow, Transformer, Kaggle, Keras, Tokenizer, Convolution*) requires specialized phonetic adaptation.
+**Grapheme-to-Phoneme (G2P)** conversion maps written orthographic sequences into International Phonetic Alphabet (IPA) representations. For the **Persian (Farsi)** language (`<fas>`), neural G2P conversion addresses four core linguistic challenges:
+1. **Unvocalized Short Vowels (Diacritic Omission)**: Standard Persian orthography omits short vowels (`/æ/` Fathe, `/e/` Kasre, `/o/` Zamme), causing pervasive homographic ambiguity in words like *شبکه* (`ʃæbæke`), *مدل* (`model`), *پژوهش* (`pæʒuːheʃ`).
+2. **Compound Words & Ezafe Morphophonemics**: Unwritten enclitic vowels (`-e` after consonants, `-je` after vowels) link noun-modifier constructions, e.g., *یادگیری عمیق* (`jɒːdɡiːɾiːjeʔæmiːɢ`), *مدل آماری* (`modeleɒːmɒːɾiː`).
+3. **Gemination (Tashdid) & Glottal Stops (Hamza / Ayn)**: Arabic-derived loanwords and morphological templates (`تَفَعُّل`, `مُفَعَّل`, `اِفتِعال`) feature doubled consonants and glottal stops (`/ʔ/`), e.g., *دقت* (`deɢɢæt`), *تعامل* (`tæʔɒːmol`), *تأکید* (`tæʔkiːd`).
+4. **Modern AI, Computing & Technical Loanwords**: Rapidly evolving deep learning terminology (*Algorithm, PyTorch, TensorFlow, Transformer, Kaggle, Keras, Tokenizer, Convolution, Processor, Database*) requires specialized phonetic adaptation.
 
-### Key Highlights of This Upgraded Notebook
-* **Large-Scale Training Corpus ($N = 8,559$ instances)**: Combines the complete official Wiktionary Persian training split (`7,149` entries from `CharsiuG2P/data/train/fas.tsv`) with a curated `235`-entry Persian Linguistic & Technical Lexicon (oversampled $6\\times$ for balanced domain adaptation).
-* **Dual Evaluation Benchmarks ($N = 560$ test words)**:
-  1. **Official Wiktionary Unseen Test Split ($N = 500$ words)**: Evaluates broad lexical generalization on unseen Persian words.
-  2. **Held-Out Stratified Challenge Suite ($N = 60$ words across 4 categories, none seen during training)**: Evaluates precision on *AI & Tech Loanwords*, *Short-Vowel Ambiguity*, *Compound & Ezafe Constructions*, and *Gemination & Glottal Stops*.
+### Key Highlights of This Large-Scale System
+* **Authoritative Large-Scale Training Corpus ($N = 115,221$ pairs)**: Constructed from the complete `MahtaFetrat/KaamelDict` corpus (116,629 entries compiled from 10 major Persian phonology lexicons including the Academy of Persian Language and Literature, Sharif GE2PE, Tihu, and Wiktionary) augmented with curated modern AI and computing loanwords.
+* **Dual Zero-Leakage Evaluation Benchmarks ($N = 560$ test words)**:
+  1. **Official Wiktionary Unseen Test Split ($N = 500$ words)**: Benchmark from CharsiuG2P evaluating broad vocabulary generalization.
+  2. **Held-Out Stratified Challenge Suite ($N = 60$ words across 4 categories, 100% unseen during training)**: High-precision evaluation across *AI & Tech Loanwords*, *Short-Vowel Ambiguity*, *Compound & Ezafe Constructions*, and *Gemination & Glottal Stops*.
 * **9 Phonetic & Sequence Evaluation Metrics**:
   * Phoneme Error Rate (**PER %**), Word Error Rate (**WER %**), Exact Word Accuracy (**WAcc %**), Normalized Edit Similarity (**Sim %**), Phonetic Character N-Gram F1 (**chrF %**), and Levenshtein Edit Operation Decomposition (**Substitution %**, **Deletion %**, **Insertion %**), plus **Vowel Confusion Matrices** and **Length-Stratified Error Analysis**.
 * **9 High-Resolution (300 DPI) Visualizations**: Exported automatically to `./figures/` for publication and technical reporting.""")
@@ -117,31 +113,33 @@ if gpu_available:
     print(f"Total VRAM      : {torch.cuda.get_device_properties(0).total_memory / (1024**3):.2f} GB")
 else:
     device = torch.device("cpu")
-    print("WARNING: GPU not detected. Running on CPU fallback.")
+    print("WARNING: GPU not detected. Running on CPU fallback.")""")
 
-!pip install -q accelerate evaluate jiwer tabulate matplotlib seaborn
+# --- CELL 3: Package Installations & Library Imports ---
+add_code("""# Step 2: Install and Import Specialized Libraries
+!pip install -q accelerate evaluate jiwer tabulate matplotlib seaborn datasets
 import seaborn as sns
 from tabulate import tabulate
-from datasets import Dataset
+from datasets import Dataset, load_dataset
 from transformers import (
     AutoTokenizer,
     T5ForConditionalGeneration,
     DataCollatorForSeq2Seq,
     Seq2SeqTrainer,
-    Seq2SeqTrainingArguments,
-    TrainerCallback
+    Seq2SeqTrainingArguments
 )
 
 os.makedirs("figures", exist_ok=True)
 os.makedirs("data", exist_ok=True)
-print("Environment and directories initialized successfully.")""")
+print("Libraries imported successfully. Output directories initialized.")""")
 
-# --- CELL 3: Markdown Section 1 Repository & Corpus ---
-add_md("""## Section 1: Cloning CharsiuG2P & Constructing the Large-Scale Persian Corpus
-We clone the official [CharsiuG2P repository](https://github.com/lingjzhu/CharsiuG2P) to access the raw Persian Wiktionary lexicon (`data/train/fas.tsv`, `data/dev/fas.tsv`, `data/test/fas.tsv`) and augment it with our curated Persian Linguistic & Domain Lexicon. A separate 60-word challenge set is held out from training and validation, and an explicit leakage audit verifies that no challenge word appears in the training data.""")
+# --- CELL 4: Data Loading & Lexicon Construction ---
+add_md("""## Section 1: Loading KaamelDict (116K+ Entries) & Zero-Leakage Benchmark Auditing
+We load the authoritative `MahtaFetrat/KaamelDict` corpus (~116,629 word-phoneme entries), convert its SAMPA phonetic encoding into standard IPA, and clone the official [CharsiuG2P repository](https://github.com/lingjzhu/CharsiuG2P) for the 500-word unseen Wiktionary test split.
+A separate 60-word held-out challenge suite across 4 linguistic categories is evaluated. Strict automated assertions verify that zero challenge or test words leak into training or validation splits.""")
 
-# --- CELL 4: Code Clone & Build Dataset ---
-add_code("""# Clone CharsiuG2P repository if not present
+# --- CELL 5: Code Data Preparation ---
+add_code("""# Step 3: Clone CharsiuG2P & Construct Unified Corpus
 if not os.path.exists("CharsiuG2P"):
     !git clone --depth 1 https://github.com/lingjzhu/CharsiuG2P.git
     print("CharsiuG2P repository cloned successfully.")
@@ -150,6 +148,7 @@ else:
 
 __DATA_LISTS__
 
+# Load Wiktionary test split (official 500-word benchmark)
 def load_charsiu_tsv(path):
     entries = []
     with open(path, "r", encoding="utf-8") as f:
@@ -162,68 +161,134 @@ def load_charsiu_tsv(path):
             entries.append((w.strip(), variants[0], variants))
     return entries
 
-wiktionary_train = load_charsiu_tsv("CharsiuG2P/data/train/fas.tsv")
-wiktionary_dev = load_charsiu_tsv("CharsiuG2P/data/dev/fas.tsv")
 wiktionary_test = load_charsiu_tsv("CharsiuG2P/data/test/fas.tsv")
+wiktionary_test_words = {w for w, _, _ in wiktionary_test}
 
-# Held-out challenge set: 60 words that never appear in training or validation
+# Held-out challenge set (60 words across 4 categories)
 challenge_items = []
 for cat, triples in HELDOUT_CHALLENGE_SET.items():
     for w, p, _ in triples:
-        challenge_items.append((w, p, [p], cat))
+        challenge_items.append((w.strip(), p.strip(), [p.strip()], cat))
+challenge_words = {w for w, _, _, _ in challenge_items}
 challenge_translit = [t for triples in HELDOUT_CHALLENGE_SET.values() for _, _, t in triples]
 
-# Curated training lexicon: 60 domain seed words + curated entries 25..199.
-# The first 25 curated entries are reserved for validation and excluded from training.
-val_curated = ADDITIONAL_CURATED_LEXICON[:25]
-all_curated_pairs = [(w, p) for pairs in DOMAIN_SEED_SET.values() for w, p in pairs] + ADDITIONAL_CURATED_LEXICON[25:]
+# SAMPA to Standard IPA Bijective Mapping
+SAMPA_TO_IPA = {
+    "a": "æ", "e": "e", "o": "o", "A": "ɒː", "i": "iː", "u": "uː",
+    "S": "ʃ", "Z": "ʒ", "C": "t͡ʃ", "j": "d͡ʒ", "y": "j", "q": "ɢ",
+    "?": "ʔ", "x": "x", "b": "b", "d": "d", "f": "f", "g": "ɡ",
+    "h": "h", "k": "k", "l": "l", "m": "m", "n": "n", "p": "p",
+    "r": "ɾ", "s": "s", "t": "t", "v": "v", "z": "z"
+}
 
-# Expanded training list: Wiktionary train + 6x oversampling of the curated training lexicon
-train_pairs = [(w, p) for w, p, _ in wiktionary_train] + (all_curated_pairs * 6)
-val_pairs = [(w, p) for w, p, _ in wiktionary_dev] + val_curated
+def sampa_tuple_to_ipa(grapheme, sampa_tokens):
+    tokens = [t for t in sampa_tokens if t and t.strip()]
+    if grapheme and grapheme[0] in ("ا", "آ") and tokens and tokens[0] == "?":
+        tokens = tokens[1:]
+    return "".join(SAMPA_TO_IPA.get(t, t) for t in tokens)
 
-# Leakage audit: no evaluation word may appear in the training data
+print("Loading MahtaFetrat/KaamelDict from Hugging Face...")
+import ast
+kaamel_ds = load_dataset("MahtaFetrat/KaamelDict")["train"]
+print(f"Loaded KaamelDict raw rows: {len(kaamel_ds):,}")
+
+seen_words = set()
+kaamel_clean_pairs = []
+skipped_chal = 0
+skipped_wikt = 0
+
+for row in kaamel_ds:
+    g = row["grapheme"].strip()
+    if not g:
+        continue
+    if g in challenge_words:
+        skipped_chal += 1
+        continue
+    if g in wiktionary_test_words:
+        skipped_wikt += 1
+        continue
+    if g in seen_words:
+        continue
+    try:
+        p_list = ast.literal_eval(row["phoneme"])
+        if not p_list or not isinstance(p_list, list):
+            continue
+        ipa = sampa_tuple_to_ipa(g, p_list[0])
+        if ipa:
+            kaamel_clean_pairs.append((g, ipa))
+            seen_words.add(g)
+    except Exception:
+        pass
+
+print(f"Clean unique KaamelDict pairs: {len(kaamel_clean_pairs):,}")
+print(f"Excluded challenge suite words: {skipped_chal} (enforcing zero leakage)")
+print(f"Excluded Wiktionary test words: {skipped_wikt} (enforcing zero leakage)")
+
+# Augment with curated domain and linguistic lexicon
+curated_added = 0
+for cat, pairs in DOMAIN_SEED_SET.items():
+    for w, ipa in pairs:
+        w_c = w.strip()
+        if w_c not in challenge_words and w_c not in wiktionary_test_words and w_c not in seen_words:
+            kaamel_clean_pairs.append((w_c, ipa.strip()))
+            seen_words.add(w_c)
+            curated_added += 1
+
+for w, ipa in ADDITIONAL_CURATED_LEXICON:
+    w_c = w.strip()
+    if w_c not in challenge_words and w_c not in wiktionary_test_words and w_c not in seen_words:
+        kaamel_clean_pairs.append((w_c, ipa.strip()))
+        seen_words.add(w_c)
+        curated_added += 1
+
+print(f"Added {curated_added} curated domain loanwords and linguistic seed pairs.")
+print(f"Total unified corpus: {len(kaamel_clean_pairs):,} pairs.")
+
+# Shuffle and split into 1,000 Dev and rest Train
+rng_split = np.random.default_rng(42)
+shuffled_idx = rng_split.permutation(len(kaamel_clean_pairs))
+val_pairs = [kaamel_clean_pairs[i] for i in shuffled_idx[:1000]]
+train_pairs = [kaamel_clean_pairs[i] for i in shuffled_idx[1000:]]
+
 train_words = {w for w, _ in train_pairs}
-leak_challenge = [w for w, _, _, _ in challenge_items if w in train_words]
-leak_val = [w for w, _ in val_curated if w in train_words]
-overlap_wiki = [w for w, _, _ in wiktionary_test if w in train_words]
-assert not leak_challenge, f"Challenge words found in training data: {leak_challenge}"
-assert not leak_val, f"Curated validation words found in training data: {leak_val}"
+val_words = {w for w, _ in val_pairs}
 
-print(f"Dataset Construction Summary:")
-print(f" - Wiktionary Base Train Pairs  : {len(wiktionary_train):,}")
-print(f" - Curated Domain/Morph Pairs   : {len(all_curated_pairs):,} (oversampled 6x -> {len(all_curated_pairs)*6:,})")
-print(f" - Total Expanded Training Set  : {len(train_pairs):,}")
-print(f" - Validation Set (Dev)         : {len(val_pairs):,}")
-print(f" - Unseen Wiktionary Test Set   : {len(wiktionary_test):,}")
-print(f"Leakage Audit:")
-print(f" - Held-out challenge words in training : {len(leak_challenge)} / {len(challenge_items)}")
-print(f" - Curated validation words in training : {len(leak_val)} / {len(val_curated)}")
-print(f" - Wiktionary test words in training    : {len(overlap_wiki)} / {len(wiktionary_test)} (overlap inherited from the official CharsiuG2P splits)")
-print(f" - Held-Out Challenge Test Set : {len(challenge_items):,} (across {len(HELDOUT_CHALLENGE_SET)} categories)")""")
+# Strict Zero-Leakage Assertions
+assert len(train_words.intersection(challenge_words)) == 0, "DATA LEAK: Challenge word found in train!"
+assert len(train_words.intersection(wiktionary_test_words)) == 0, "DATA LEAK: Wiktionary word found in train!"
+assert len(val_words.intersection(challenge_words)) == 0, "DATA LEAK: Challenge word found in dev!"
+assert len(val_words.intersection(wiktionary_test_words)) == 0, "DATA LEAK: Wiktionary word found in dev!"
+assert len(train_words.intersection(val_words)) == 0, "DATA LEAK: Validation word found in train!"
 
-# --- CELL 5: Exploratory Data Analysis & Figure 1 ---
+print("\\n[+] Zero-Leakage Audit PASSED: 100% verified.")
+print(f" - Final Training Corpus   : {len(train_pairs):,} word-phoneme pairs")
+print(f" - Validation Split (Dev)  : {len(val_pairs):,} pairs")
+print(f" - Wiktionary Test Split   : {len(wiktionary_test):,} pairs")
+print(f" - Challenge Suite         : {len(challenge_items):,} pairs across {len(HELDOUT_CHALLENGE_SET)} categories")""")
+
+# --- CELL 6: Markdown Section 2 Corpus EDA ---
 add_md("""## Section 2: Corpus Exploratory Data Analysis (EDA) & Phoneme Distribution
-We analyze the structural properties of the Persian G2P corpus:
-1. **Orthographic vs. Phonetic Sequence Length**: Because Persian omits short vowels (`/æ/`, `/e/`, `/o/`) in writing, the IPA phoneme sequence is systematically longer than the written grapheme sequence.
-2. **Phoneme Inventory Frequency**: We tokenize all IPA transcriptions into atomic phoneme units (`t͡ʃ`, `d͡ʒ`, `ɒː`, `iː`, `uː`, `æ`, `e`, `o`, etc.) to inspect the empirical distribution across Persian words.""")
+We analyze the structural properties of our 116,000-instance Persian G2P corpus:
+1. **Grapheme vs. Phoneme Length Correlation**: Persian omits short vowels (`/æ/`, `/e/`, `/o/`) in writing, which causes phonetic sequences to be consistently longer than orthographic sequences.
+2. **Empirical Phoneme Distribution**: Tokenizing all IPA transcriptions into atomic phoneme units reveals the most frequent vowels and consonants in standard Persian.""")
 
-# --- CELL 6: Code Figure 1 EDA ---
-add_code("""# Atomic IPA Tokenizer & Figure 1: Corpus Exploratory Data Analysis
+# --- CELL 7: Code Figure 1 Corpus EDA ---
+add_code("""# Figure 1: Corpus Exploratory Data Analysis & Phoneme Distribution
 IPA_TOKEN_REGEX = re.compile(r"t͡ʃ|d͡ʒ|ɒː|iː|uː|ɔː|oʊ|eɪ|.")
 
 def tokenize_ipa(ipa_str):
     cleaned = ipa_str.replace(" ", "").replace("ˈ", "").replace("ˌ", "").replace(".", "")
     return [t for t in IPA_TOKEN_REGEX.findall(cleaned) if t.strip()]
 
-unique_corpus = [(w, p) for w, p, _ in wiktionary_train] + all_curated_pairs
-grapheme_lengths = np.array([len(w) for w, _ in unique_corpus])
-phoneme_tokens_list = [tokenize_ipa(p) for _, p in unique_corpus]
+# Sample 10,000 words for length regression visualization
+sample_subset = [train_pairs[i] for i in rng_split.choice(len(train_pairs), size=min(10000, len(train_pairs)), replace=False)]
+grapheme_lengths = np.array([len(w) for w, _ in sample_subset])
+phoneme_tokens_list = [tokenize_ipa(p) for _, p in sample_subset]
 phoneme_lengths = np.array([len(toks) for toks in phoneme_tokens_list])
 
 phoneme_counter = Counter()
-for toks in phoneme_tokens_list:
-    phoneme_counter.update(toks)
+for _, p in train_pairs[:20000]:
+    phoneme_counter.update(tokenize_ipa(p))
 
 plt.style.use('seaborn-v0_8-whitegrid' if 'seaborn-v0_8-whitegrid' in plt.style.available else 'default')
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5.5), dpi=300)
@@ -233,21 +298,20 @@ mask = (grapheme_lengths <= 20) & (phoneme_lengths <= 25)
 x_g = grapheme_lengths[mask]
 y_p = phoneme_lengths[mask]
 
-rng = np.random.default_rng(42)
-jitter_x = x_g + rng.normal(0, 0.18, size=len(x_g))
-jitter_y = y_p + rng.normal(0, 0.18, size=len(y_p))
+jitter_x = x_g + rng_split.normal(0, 0.18, size=len(x_g))
+jitter_y = y_p + rng_split.normal(0, 0.18, size=len(y_p))
 
-ax1.scatter(jitter_x, jitter_y, alpha=0.15, s=12, color='#2563EB', edgecolors='none', label='Corpus Words (N=7,409)')
+ax1.scatter(jitter_x, jitter_y, alpha=0.15, s=12, color='#2563EB', edgecolors='none', label='Corpus Sample (N=10,000)')
 slope, intercept = np.polyfit(x_g, y_p, 1)
 r_corr = np.corrcoef(x_g, y_p)[0, 1]
 x_line = np.linspace(1, 18, 100)
 ax1.plot(x_line, slope * x_line + intercept, color='#DC2626', linewidth=2.5,
          label=f'Fit: y = {slope:.2f}x + {intercept:.2f} (R = {r_corr:.2f})')
-ax1.plot(x_line, x_line, color='#64748B', linestyle='--', linewidth=1.5, label='1:1 Identity Line (y = x)')
+ax1.plot(x_line, x_line, color='#64748B', linestyle='--', linewidth=1.5, label='1:1 Line (y = x)')
 
 ax1.set_title("(A) Persian Grapheme Length vs. IPA Phoneme Length", fontsize=12.5, fontweight='bold', pad=10)
 ax1.set_xlabel("Orthographic Word Length (Characters)", fontsize=11)
-ax1.set_ylabel("Phonetic Transcription Length (IPA Phonemes)", fontsize=11)
+ax1.set_ylabel("Phonetic Length (IPA Phonemes)", fontsize=11)
 ax1.set_xlim(1, 18)
 ax1.set_ylim(1, 24)
 ax1.legend(fontsize=9.5, loc='upper left', frameon=True)
@@ -259,43 +323,39 @@ ph_counts = [v for _, v in top20]
 vowels_set = {'æ', 'e', 'o', 'ɒː', 'iː', 'uː', 'oʊ'}
 bar_colors = ['#10B981' if k in vowels_set else '#3B82F6' for k, _ in top20]
 
-y_pos = np.arange(len(top20))
-ax2.barh(y_pos, ph_counts, color=bar_colors, edgecolor='#1E293B', linewidth=0.6, alpha=0.9)
-ax2.set_yticks(y_pos)
-ax2.set_yticklabels(ph_labels, fontsize=10.5, fontweight='bold')
+ax2.barh(range(len(top20)), ph_counts, color=bar_colors, edgecolor='#1E293B', alpha=0.9, height=0.7)
+ax2.set_yticks(range(len(top20)))
+ax2.set_yticklabels(ph_labels, fontsize=10, fontweight='bold')
 ax2.invert_yaxis()
-ax2.set_title("(B) Top 20 Most Frequent Persian IPA Phonemes (Green = Vowels)", fontsize=12.5, fontweight='bold', pad=10)
-ax2.set_xlabel("Occurrences in Corpus", fontsize=11)
+ax2.set_title("(B) Top 20 Persian Phonemes in KaamelDict (Vowels Green, Consonants Blue)", fontsize=12.5, fontweight='bold', pad=10)
+ax2.set_xlabel("Occurrences in Sample", fontsize=11)
 
 for i, c in enumerate(ph_counts):
-    ax2.text(c + 80, i, f"{c:,}", va='center', fontsize=9, fontweight='bold', color='#1E293B')
+    ax2.text(c + 100, i, f"{c:,}", va='center', fontsize=8.5, fontweight='bold', color='#1E293B')
 ax2.set_xlim(0, max(ph_counts) * 1.15)
 
 plt.tight_layout()
 fig.savefig("figures/dataset_distribution.png", dpi=300, bbox_inches='tight')
 plt.show()
-print(f"[+] Saved 'figures/dataset_distribution.png' | Mean Grapheme Len: {grapheme_lengths.mean():.2f} | Mean Phoneme Len: {phoneme_lengths.mean():.2f}")""")
+print(f"[+] Saved 'figures/dataset_distribution.png' | Mean Grapheme: {grapheme_lengths.mean():.2f} | Mean Phoneme: {phoneme_lengths.mean():.2f}")""")
 
-# --- CELL 7: Markdown Section 3 Comprehensive Metrics ---
+# --- CELL 8: Markdown Section 3 Metrics Suite ---
 add_md("""## Section 3: Comprehensive Phonetic Evaluation Metrics Suite
-To rigorously evaluate our Persian G2P system, we implement **9 complementary metrics**:
-1. **Phoneme Error Rate (PER %)**:
-   $$\\text{PER} = \\frac{S + D + I}{N_{\\text{ref}}} \\times 100$$
-2. **Word Error Rate (WER %)** and **Exact Word Accuracy (WAcc %)**:
-   $$\\text{WER} = \\frac{1}{M}\\sum_{i=1}^M \\mathbb{I}(P_{\\text{pred}}^{(i)} \\notin \\mathcal{R}^{(i)}) \\times 100, \\quad \\text{WAcc} = 100 - \\text{WER}$$
-3. **Normalized Sequence Similarity (Sim %)**:
-   $$\\text{Sim} = \\frac{1}{M}\\sum_{i=1}^M \\left(1 - \\frac{\\text{Levenshtein}(P_{\\text{pred}}^{(i)}, P_{\\text{ref}}^{(i)})}{\\max(|P_{\\text{pred}}^{(i)}|, |P_{\\text{ref}}^{(i)}|)}\\right) \\times 100$$
-4. **Phonetic Character N-Gram F1 Score (chrF %)**: Macro-averaged $F_1$ overlap of character $n$-grams ($n \\in \\{1, 2, 3, 4\\}$).
-5. **Levenshtein Edit Operation Rates (Sub %, Del %, Ins %)**: Exact decomposition via dynamic programming backtrace into phoneme **Substitutions**, **Deletions**, and **Insertions**.
-6. **Persian Vowel Confusion Matrix**: Alignment tracking across the 6 core Persian vowels (`/æ/`, `/e/`, `/o/`, `/ɒː/`, `/iː/`, `/uː/`) and deletion (`/∅/`).""")
+To rigorously benchmark model quality before and after fine-tuning, we implement **9 complementary metrics**:
+1. **Phoneme Error Rate (PER %)**: $\\text{PER} = \\frac{S + D + I}{N} \\times 100$, where $S$, $D$, $I$ are substitutions, deletions, and insertions, and $N$ is the reference length.
+2. **Word Error Rate (WER %)**: Fraction of words with at least one phonetic mismatch.
+3. **Word Accuracy (WAcc %)**: $100 - \\text{WER}$, percentage of entirely error-free phonetic transcriptions.
+4. **Normalized Sequence Similarity (Sim %)**: $(1 - \\frac{\\text{dist}}{\\max(|P|, |R|)}) \\times 100$.
+5. **Character N-Gram F1 (chrF %)**: Geometric mean of n-gram precision and recall ($n=1..4$) over IPA characters.
+6. **Substitution Rate (Sub %)**: Fraction of reference phonemes erroneously substituted.
+7. **Deletion Rate (Del %)**: Fraction of reference phonemes omitted by the model.
+8. **Insertion Rate (Ins %)**: Spurious phonemes inserted relative to reference length.
+9. **Average Levenshtein Distance**: Mean phonetic edit distance per word.""")
 
-# --- CELL 8: Code Metrics Implementation ---
-add_code("""# Comprehensive Phonetic Metrics Implementation
+# --- CELL 9: Code Metrics Implementation ---
+add_code("""# Step 4: Metric Functions and Levenshtein Backtracking Alignment
 def levenshtein_alignment(pred_seq, ref_seq):
-    \"\"\"
-    Computes Levenshtein edit distance and backtraces optimal alignment
-    to decompose errors into Substitutions (S), Deletions (D), and Insertions (I).
-    \"\"\"
+    \"\"\"Dynamic programming table computing edit distance and optimal alignment path.\"\"\"
     m, n = len(pred_seq), len(ref_seq)
     dp = [[0] * (n + 1) for _ in range(m + 1)]
     for i in range(m + 1):
@@ -304,17 +364,15 @@ def levenshtein_alignment(pred_seq, ref_seq):
         dp[0][j] = j
     for i in range(1, m + 1):
         for j in range(1, n + 1):
-            cost = 0 if pred_seq[i - 1] == ref_seq[j - 1] else 1
-            dp[i][j] = min(
-                dp[i - 1][j] + 1,       # insertion in pred
-                dp[i][j - 1] + 1,       # deletion from ref
-                dp[i - 1][j - 1] + cost # match or substitution
-            )
-    i, j = m, n
-    sub = dele = ins = 0
+            if pred_seq[i - 1] == ref_seq[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1]
+            else:
+                dp[i][j] = 1 + min(dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1])
+    sub, dele, ins = 0, 0, 0
     aligned_pairs = []
+    i, j = m, n
     while i > 0 or j > 0:
-        if i > 0 and j > 0 and pred_seq[i - 1] == ref_seq[j - 1] and dp[i][j] == dp[i - 1][j - 1]:
+        if i > 0 and j > 0 and pred_seq[i - 1] == ref_seq[j - 1]:
             aligned_pairs.append((ref_seq[j - 1], pred_seq[i - 1]))
             i -= 1
             j -= 1
@@ -334,7 +392,7 @@ def levenshtein_alignment(pred_seq, ref_seq):
     return dp[m][n], sub, dele, ins, aligned_pairs[::-1]
 
 def compute_chrf_single(pred, ref, max_n=4):
-    \"\"\"Computes character n-gram F1 (chrF) score between predicted and reference IPA strings.\"\"\"
+    \"\"\"Computes character n-gram F1 (chrF) score.\"\"\"
     if not pred and not ref:
         return 1.0
     if not pred or not ref:
@@ -351,10 +409,7 @@ def compute_chrf_single(pred, ref, max_n=4):
     return float(np.mean(f1_scores))
 
 def evaluate_predictions_comprehensive(predictions, references_list, words_list=None):
-    \"\"\"
-    Evaluates predicted IPA strings against reference variants.
-    Returns dictionary of 9 aggregate metrics, per-word records, and vowel confusion pairs.
-    \"\"\"
+    \"\"\"Evaluates predictions against reference variants across all 9 phonetic metrics.\"\"\"
     total_dist = total_sub = total_del = total_ins = total_ref_len = 0
     word_errors = 0
     sim_scores = []
@@ -366,7 +421,6 @@ def evaluate_predictions_comprehensive(predictions, references_list, words_list=
         if isinstance(ref_variants, str):
             ref_variants = [ref_variants]
         pred_clean = pred.strip().replace(" ", "")
-        # Select closest valid reference variant if multiple exist
         best_dist = None
         best_ref = ref_variants[0]
         best_s = best_d = best_i = 0
@@ -378,7 +432,6 @@ def evaluate_predictions_comprehensive(predictions, references_list, words_list=
                 best_ref = rv_clean
                 best_s, best_d, best_i = s, dl, ins
 
-        # Also align at atomic IPA token level for vowel confusion tracking
         pred_toks = tokenize_ipa(pred_clean)
         ref_toks = tokenize_ipa(best_ref)
         _, _, _, _, tok_pairs = levenshtein_alignment(pred_toks, ref_toks)
@@ -417,7 +470,7 @@ def evaluate_predictions_comprehensive(predictions, references_list, words_list=
         })
 
     n_words = max(len(predictions), 1)
-    metrics_summary = {
+    return {
         "PER": (total_dist / max(total_ref_len, 1)) * 100.0,
         "WER": (word_errors / n_words) * 100.0,
         "WAcc": (1.0 - (word_errors / n_words)) * 100.0,
@@ -430,22 +483,20 @@ def evaluate_predictions_comprehensive(predictions, references_list, words_list=
         "records": per_word_records,
         "token_pairs": all_aligned_token_pairs
     }
-    return metrics_summary
+print("Phonetic evaluation suite ready.")""")
 
-print("Comprehensive evaluation metrics module initialized.")""")
-
-# --- CELL 9: Load Pretrained Model & Baseline Evaluation ---
-add_md("""## Section 4: Loading Pretrained ByT5 & Baseline Benchmarking (Before Fine-Tuning)
-We load the pretrained multilingual checkpoint (`charsiu/g2p_multilingual_byT5_tiny_16_layers_100`) and evaluate its zero/few-shot Persian performance on both:
+# --- CELL 10: Markdown Section 4 Baseline Evaluation ---
+add_md("""## Section 4: Pre-Fine-Tuning Baseline Evaluation
+We load the pretrained `charsiu/g2p_multilingual_byT5_tiny_16_layers_100` model with `<fas>: ` language prefix and evaluate its zero-shot performance across both benchmarks before fine-tuning:
 1. **Unseen Wiktionary Test Benchmark ($N = 500$ words)**
-2. **Held-Out Stratified Challenge Suite ($N = 60$ words across 4 categories, unseen during training)**""")
+2. **Held-Out Stratified Challenge Suite ($N = 60$ words across 4 categories)**""")
 
-# --- CELL 10: Code Baseline Evaluation ---
-add_code("""# Load Pretrained Model & Tokenizer
+# --- CELL 11: Code Baseline Evaluation ---
+add_code("""# Step 5: Pretrained Model Loading & Baseline Inference
 MODEL_ID = "charsiu/g2p_multilingual_byT5_tiny_16_layers_100"
 TOKENIZER_ID = "google/byt5-small"
 
-print(f"Loading pretrained model: {MODEL_ID} ...")
+print(f"Loading pretrained base model: {MODEL_ID} ...")
 tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_ID)
 model = T5ForConditionalGeneration.from_pretrained(MODEL_ID).to(device)
 model.eval()
@@ -455,7 +506,6 @@ trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
 print(f"Total Parameters: {total_params:,} | Trainable Parameters: {trainable_params:,}")
 
 def batch_predict_g2p(words, batch_size=64):
-    \"\"\"Runs batched greedy G2P inference with '<fas>: ' prefix.\"\"\"
     all_preds = []
     model.eval()
     for i in range(0, len(words), batch_size):
@@ -473,7 +523,6 @@ def batch_predict_g2p(words, batch_size=64):
         all_preds.extend([d.strip().replace(" ", "") for d in decoded])
     return all_preds
 
-# Prepare test sets
 wiki_test_words = [w for w, _, _ in wiktionary_test]
 wiki_test_refs = [variants for _, _, variants in wiktionary_test]
 
@@ -500,18 +549,18 @@ summary_rows = [
 ]
 print(tabulate(summary_rows, headers=["Benchmark", "PER", "WER", "WAcc", "Sim", "chrF", "Sub / Del / Ins"], tablefmt="grid"))""")
 
-# --- CELL 11: Markdown Section 5 Large-Scale Fine-Tuning ---
-add_md("""## Section 5: Large-Scale GPU Fine-Tuning on 8,559 Persian Examples
-We now fine-tune the `ByT5` sequence-to-sequence model on our **8,559-instance Persian dataset** using Hugging Face `Seq2SeqTrainer`:
-* **Training Corpus**: `8,559` pairs (`7,149` Wiktionary Persian + `1,410` domain-weighted curated pairs)
-* **Validation Corpus**: `75` pairs evaluated at the end of every epoch
-* **Batch Size**: `32` (`per_device_train_batch_size=32`)
-* **Learning Rate**: $4 \\times 10^{-4}$ with Cosine Annealing and 100 warmup steps
-* **Epochs**: `8` full passes over the corpus (~2,184 optimization steps)
+# --- CELL 12: Markdown Section 5 Large-Scale Fine-Tuning ---
+add_md("""## Section 5: Large-Scale GPU Fine-Tuning on KaamelDict (115,221 Examples)
+We fine-tune the byte-level `ByT5` sequence-to-sequence model on our authoritative **115,221-instance Persian phonology corpus**:
+* **Training Corpus**: `115,221` verified Persian word-phoneme pairs
+* **Validation Corpus**: `1,000` pairs evaluated periodically during training
+* **Batch Size**: `64` (`per_device_train_batch_size=64`)
+* **Learning Rate**: $3 \\times 10^{-4}$ with Cosine Annealing and 300 warmup steps
+* **Epochs**: `3` full passes over the corpus (~5,400 optimization steps)
 * **Precision**: Mixed Precision (`FP16`) on GPU""")
 
-# --- CELL 12: Code Training Setup & Execution ---
-add_code("""# Format Hugging Face Datasets for Large-Scale Fine-Tuning
+# --- CELL 13: Code Fine-Tuning Execution ---
+add_code("""# Step 6: Dataset Formatting & GPU Fine-Tuning
 rng_shuf = np.random.default_rng(42)
 shuffled_indices = rng_shuf.permutation(len(train_pairs))
 shuffled_train_pairs = [train_pairs[i] for i in shuffled_indices]
@@ -543,15 +592,16 @@ data_collator = DataCollatorForSeq2Seq(
 
 training_args = Seq2SeqTrainingArguments(
     output_dir="./checkpoints_persian_g2p",
-    per_device_train_batch_size=32,
+    per_device_train_batch_size=64,
     per_device_eval_batch_size=64,
-    learning_rate=4e-4,
+    learning_rate=3e-4,
     weight_decay=0.01,
-    num_train_epochs=8,
-    warmup_steps=100,
+    num_train_epochs=3,
+    warmup_steps=300,
     lr_scheduler_type="cosine",
-    logging_steps=25,
-    eval_strategy="epoch",
+    logging_steps=50,
+    eval_strategy="steps",
+    eval_steps=600,
     save_strategy="no",
     fp16=torch.cuda.is_available(),
     predict_with_generate=True,
@@ -575,16 +625,16 @@ elif "tokenizer" in sig.parameters:
 
 trainer = Seq2SeqTrainer(**trainer_kwargs)
 
-print(f"Starting Large-Scale Persian G2P Fine-Tuning on {device} ({len(train_ds):,} train samples, 8 epochs)...")
+print(f"Starting Large-Scale Persian G2P Fine-Tuning on {device} ({len(train_ds):,} train samples, 3 epochs)...")
 train_start = time.time()
 train_result = trainer.train()
 train_duration = time.time() - train_start
 
-print(f"\\nFine-Tuning Completed in {train_duration:.2f} seconds!")
+print(f"\\nFine-Tuning Completed in {train_duration:.2f} seconds ({train_duration/60:.2f} minutes)!")
 print(f"Final Training Loss: {train_result.metrics.get('train_loss', 0.0):.4f}")""")
 
-# --- CELL 13: Code Figure 2 Training & Validation Loss Curve ---
-add_code("""# Figure 2: Dual-Axis Training & Validation Convergence + Cosine Learning Rate Trajectory
+# --- CELL 14: Code Figure 2 Loss Curve ---
+add_code("""# Figure 2: Dual-Axis Training & Validation Convergence + Cosine Learning Rate Schedule
 log_history = trainer.state.log_history
 
 train_steps = [entry["step"] for entry in log_history if "loss" in entry]
@@ -594,16 +644,15 @@ learning_rates = [entry["learning_rate"] * 1e4 for entry in log_history if "loss
 eval_steps = [entry["step"] for entry in log_history if "eval_loss" in entry]
 eval_losses = [entry["eval_loss"] for entry in log_history if "eval_loss" in entry]
 
-fig, ax1 = plt.subplots(figsize=(10, 5.5), dpi=300)
+fig, ax1 = plt.subplots(figsize=(10.5, 5.5), dpi=300)
 
-line1 = ax1.plot(train_steps, train_losses, color='#2563EB', linewidth=2.2, marker='o', markersize=4,
-                 alpha=0.9, label='Training Cross-Entropy Loss')
+line1 = ax1.plot(train_steps, train_losses, color='#2563EB', linewidth=2.2, alpha=0.9, label='Training Cross-Entropy Loss')
 if eval_steps:
     line2 = ax1.plot(eval_steps, eval_losses, color='#DC2626', linewidth=2.5, marker='s', markersize=6,
-                     linestyle='--', label='Validation Loss (Dev Split)')
+                     linestyle='--', label='Validation Loss (Dev Split N=1,000)')
 
-ax1.set_title("Large-Scale Persian G2P Fine-Tuning Convergence & LR Schedule (ByT5)", fontsize=13.5, fontweight='bold', pad=14)
-ax1.set_xlabel("Optimization Steps (Batch Size = 32, 8 Epochs over 8,559 Samples)", fontsize=11.5)
+ax1.set_title("Large-Scale Persian G2P Fine-Tuning Convergence on KaamelDict (115K Pairs)", fontsize=13.5, fontweight='bold', pad=14)
+ax1.set_xlabel("Optimization Steps (Batch Size = 64, 3 Epochs)", fontsize=11.5)
 ax1.set_ylabel("Cross-Entropy Loss", fontsize=11.5, color='#1E293B')
 ax1.grid(True, linestyle='--', alpha=0.6)
 
@@ -622,12 +671,12 @@ fig.savefig("figures/loss_curve.png", dpi=300, bbox_inches='tight')
 plt.show()
 print("[+] Saved 'figures/loss_curve.png'")""")
 
-# --- CELL 14: Markdown Section 6 Post-Finetuning Evaluation ---
+# --- CELL 15: Markdown Section 6 Post-Fine-Tuning Evaluation ---
 add_md("""## Section 6: Comprehensive Post-Fine-Tuning Evaluation & Multi-Benchmark Comparison
-We now evaluate our fine-tuned Persian G2P model across both benchmarks (`N = 500` Unseen Wiktionary Test Set and `N = 60` Held-Out Stratified Challenge Suite) and compute exact error reductions across all 9 metrics.""")
+We now evaluate our fine-tuned Persian G2P model across both benchmarks (`N = 500` Unseen Wiktionary Test Set and `N = 60` Held-Out Stratified Challenge Suite) and compute exact empirical error reductions across all 9 metrics.""")
 
-# --- CELL 15: Code Post-Finetuning Evaluation & Tables ---
-add_code("""# Run Post-Fine-Tuning Inference on Both Benchmarks
+# --- CELL 16: Code Post-Fine-Tuning Evaluation & Tables ---
+add_code("""# Step 7: Post-Fine-Tuning Evaluation on Wiktionary Test and Challenge Suite
 t0 = time.time()
 finetuned_wiki_preds = batch_predict_g2p(wiki_test_words, batch_size=64)
 finetuned_chal_preds = batch_predict_g2p(chal_test_words, batch_size=64)
@@ -685,8 +734,8 @@ for cat in cat_names:
 print("\\n================ STRATIFIED LINGUISTIC CATEGORY BREAKDOWN (N=60) ================")
 print(tabulate(cat_rows, headers=["Linguistic Category", "Base PER", "FT PER", "Base WER", "FT WER", "Base chrF", "FT chrF"], tablefmt="grid"))""")
 
-# --- CELL 16: Code Figures 3, 4, 5 ---
-add_code("""# Generate Figures 3, 4, and 5: Multi-Metric Benchmarks, Category Breakdown, and Edit Operations
+# --- CELL 17: Code Figures 3, 4, 5 ---
+add_code("""# Figures 3, 4, and 5: Multi-Metric Benchmarks, Category Breakdown, and Edit Operations
 
 # --- Figure 3: Multi-Metric Benchmark Comparison (2 Panels) ---
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5.5), dpi=300)
@@ -810,8 +859,8 @@ fig.savefig("figures/edit_operations_breakdown.png", dpi=300, bbox_inches='tight
 plt.show()
 print("[+] Saved 'figures/edit_operations_breakdown.png'")""")
 
-# --- CELL 17: Code Figures 6, 7, 8 ---
-add_code("""# Generate Figures 6, 7, and 8: Word Length Analysis, Persian Vowel Confusion Matrix, and Word Edit Distance Reduction
+# --- CELL 18: Code Figures 6, 7, 8 ---
+add_code("""# Figures 6, 7, and 8: Word Length Analysis, Persian Vowel Confusion Matrix, and Edit Distance Reduction
 
 # --- Figure 6: Error Rate by Orthographic Word Length Buckets ---
 combined_base_records = baseline_wiki_metrics['records'] + baseline_chal_metrics['records']
@@ -930,18 +979,14 @@ fig.savefig("figures/word_edit_distance_reduction.png", dpi=300, bbox_inches='ti
 plt.show()
 print("[+] Saved 'figures/word_edit_distance_reduction.png'")""")
 
-# --- CELL 18: Architecture Figure & Sentence Pipeline + Export ---
-add_md("""## Section 7: Sentence-Level Persian Phonetic Pipeline & Checkpoint Export
-We export the architecture diagram (`figures/g2p_byt5_architecture.png`), demonstrate sentence-level Persian phonetic transcription Before vs. After fine-tuning, save the complete metrics JSON (`evaluation_metrics.json`), and save the final fine-tuned model weights (`./finetuned_byt5_g2p_model`).""")
-
-# --- CELL 19: Code Export & Sentence Demo ---
-add_code("""# Figure 9: Architecture Diagram
-fig, ax = plt.subplots(figsize=(11, 4.2), dpi=300)
+# --- CELL 19: Architecture Figure & Final Checkpoint Export ---
+add_code("""# Figure 9: ByT5 Architecture Diagram & Checkpoint Export
+fig, ax = plt.subplots(figsize=(11.5, 4.2), dpi=300)
 ax.axis('off')
 boxes = [
     ("Persian Input (Graphemes)\\n'<fas>: Algoritm / Shabake'", 0.10, 0.5, '#E0F2FE', '#0284C7'),
     ("Raw UTF-8 Byte Stream\\n[60, 102, 97, 115, ...]", 0.34, 0.5, '#FEF3C7', '#D97706'),
-    ("Fine-Tuned ByT5 Seq2Seq\\n(Persian Corpus Pairs)", 0.60, 0.5, '#EDE9FE', '#7C3AED'),
+    ("Fine-Tuned ByT5 Seq2Seq\\n(KaamelDict 115K Pairs)", 0.60, 0.5, '#EDE9FE', '#7C3AED'),
     ("Persian IPA Output\\n/ʔælɡoɾiːtm/ | /ʃæbæke/", 0.86, 0.5, '#DCFCE7', '#16A34A')
 ]
 for text, x_c, y_c, bg, border in boxes:
@@ -973,8 +1018,7 @@ print(tabulate(qual_rows, headers=["Persian Word", "Category", "Ground Truth IPA
 # Export comprehensive JSON summary for reproducibility
 export_summary = {
     "train_samples_total": len(train_pairs),
-    "wiktionary_train_samples": len(wiktionary_train),
-    "curated_lexicon_unique": len(all_curated_pairs),
+    "kaamel_dict_total": len(kaamel_ds),
     "val_samples": len(val_pairs),
     "wiktionary_test_samples": len(wiki_test_words),
     "challenge_test_samples": len(chal_test_words),
