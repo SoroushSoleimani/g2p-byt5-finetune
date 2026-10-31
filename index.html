@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Persian G2P ByT5: Audio Comparison (.wav) & Diagnostic Charts</title>
+  <meta name="description" content="Interactive Before vs. After audio comparison (.wav) and diagnostic visualizations for Persian G2P ByT5 fine-tuned on KaamelDict (116K+ words).">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Vazirmatn:wght@500;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .font-fa { font-family: 'Vazirmatn', sans-serif; }
+    .font-mono { font-family: 'Fira Code', monospace; }
+    audio { filter: drop-shadow(0 1px 1px rgba(0,0,0,0.05)); }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Minimal Header -->
+  <header class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <span class="px-2.5 py-1 rounded bg-indigo-600 text-white font-bold text-xs tracking-wider">ByT5 G2P</span>
+        <h1 class="text-base sm:text-lg font-bold text-white tracking-tight">Persian Audio Comparison & Diagnostic Charts</h1>
+      </div>
+      <div class="flex items-center space-x-3 text-sm">
+        <a href="#audio-showcase" class="text-slate-300 hover:text-white transition">Audio (.wav)</a>
+        <span class="text-slate-600">&bull;</span>
+        <a href="#diagnostic-charts" class="text-slate-300 hover:text-white transition">9 Charts</a>
+        <span class="text-slate-600">&bull;</span>
+        <a href="https://github.com/SoroushSoleimani/g2p-byt5-finetune" target="_blank" rel="noopener"
+           class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition">
+          GitHub Repo
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Summary -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-6">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-slate-800">
+      <div>
+        <p class="text-xs uppercase font-semibold text-indigo-400 tracking-wider">Before vs. After Fine-Tuning on KaamelDict (116K+ Words)</p>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">Interactive Audio & Visual Comparison</h2>
+      </div>
+      <div class="flex flex-wrap gap-2 text-xs">
+        <span class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 font-mono">23 Comparison Pairs (46 .wav files)</span>
+        <span class="px-3 py-1.5 rounded-lg bg-emerald-950/80 border border-emerald-700 text-emerald-300 font-mono">-52.4% PER on Challenge Set</span>
+        <span class="px-3 py-1.5 rounded-lg bg-indigo-950/80 border border-indigo-700 text-indigo-300 font-mono">Word Acc: 21.7% &rarr; 51.7%</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 1: AUDIO SAMPLES (.WAV) -->
+  <section id="audio-showcase" class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-xl font-bold text-white tracking-tight flex items-center space-x-2">
+        <span>Playable Audio Comparison (.wav)</span>
+        <span class="text-xs font-normal text-slate-400">(23 Examples)</span>
+      </h3>
+      <span class="text-xs text-slate-400">Synthesized with Neural TTS (fa-IR-FaridNeural)</span>
+    </div>
+
+    <!-- Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Held-Out: Compound & Ezafe</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Kasre Ezafe (-e-) restored</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">مدل آماری</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/modeleɒːmɒːɾiː/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/mædælɒːmɒːɾiː/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/modeleɒːmɒːɾiː/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/modele_amari_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/modele_amari_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Held-Out: Compound & Ezafe</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Ezafe glide (-ye-) & glottal /ʔ/ restored</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">شبکه عمیق</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/ʃæbækejeʔæmiːɢ/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/ʃæbkeʔæmiːɢ/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/ʃæbækejeʔæmiːɢ/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/shabake_amigh_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/shabake_amigh_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Held-Out: Gemination & Glottal</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Glottal stop /ʔ/ and Zamme /o/ corrected</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">تعامل</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/tæʔɒːmol/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/tæʔɒːmæl/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/tæʔɒːmol/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/taamol_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/taamol_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Held-Out: Short Vowels</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Unwritten Kasre /e/ restored</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">ویژگی</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/viːʒeɡiː/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/viːʒɡiː/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/viːʒeɡiː/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/vizhegi_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/vizhegi_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Held-Out: Short Vowels</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Initial Fathe /æ/ distinction corrected</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">پژوهشگر</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/pæʒuːheʃɡæɾ/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/peʒuːheʃɡæɾ/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/pæʒuːheʃɡæɾ/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/pazhuheshgar_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/pazhuheshgar_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Held-Out: Tech Loanword</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Epenthesis removed, accurate tech pronunciation</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">پروسسور</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/pɾosesoɾ/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/poɾuːssuːɾ/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/pɾosesoɾ/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/processor_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/processor_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Tech Loanword</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Proper English loanword adaptation</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">پایتورچ</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/pɒːjtɔːɾt͡ʃ/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/pɒːjtuːɾt͡ʃ/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/pɒːjtɔːɾt͡ʃ/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/pytorch_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/pytorch_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Tech Loanword</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Vowel diphthong /oʊ/ & vowels corrected</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">تنسورفلو</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/tensoɾfloʊ/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/tænsuːɾfluː/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/tensoɾfloʊ/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/tensorflow_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/tensorflow_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Tech Loanword</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Natural consonant cluster without spurious vowel</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">ترنسفورمر</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/tɾænsfoɾmeɾ/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/teɾænsfuːɾmeɾ/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/tɾænsfoɾmeɾ/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/transformer_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/transformer_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Tech Loanword</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Accurate Zamme /o/ vocalization</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">الگوریتم</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/ʔælɡoɾiːtm/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/ælɡuːɾiːtm/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/ʔælɡoɾiːtm/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/algoritm_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/algoritm_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Tech Loanword</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Vowel epenthesis /e/ placed correctly</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">کگل</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/kæɡel/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/kæɡl/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/kæɡel/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/kaggle_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/kaggle_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Tech Loanword</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Initial Kasre /e/ vocalization</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">کراس</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/keɾɒːs/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/kɾɒːs/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/keɾɒːs/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/keras_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/keras_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Linguistic Term</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Short Kasre vowel accuracy</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">گرافیم</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/ɡeɾɒːfem/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/ɡɾɒːfiːm/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/ɡeɾɒːfem/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/grapheme_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/grapheme_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Short Vowels</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Interior Fathe /æ/ restored</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">شبکه</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/ʃæbæke/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/ʃæbke/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/ʃæbæke/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/shabake_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/shabake_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Short Vowels</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Accurate /o/ and /e/ vowels</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">مدل</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/model/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/mædæl/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/model/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/model_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/model_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Short Vowels</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Initial Zamme /o/ distinction</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">مهندسی</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/mohændesiː/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/mehændesiː/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/mohændesiː/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/mohandesi_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/mohandesi_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Short Vowels</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Initial Zamme /o/ vs Fathe /æ/</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">محاسبه</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/mohɒːsebe/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/mæhɒːsebe/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/mohɒːsebe/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/mohasebe_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/mohasebe_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Compound & ZWNJ</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Half-space (ZWNJ) boundary preserved</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">بهینه‌سازی</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/behiːnesɒːziː/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/bæhiːnesɒːziː/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/behiːnesɒːziː/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/behine_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/behine_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Gemination (Tashdid)</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Doubled /jj/ Tashdid gemination</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">متغیر</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/motæɢæjjeɾ/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/motæɢɒːjeɾ/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/motæɢæjjeɾ/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/motaghayyer_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/motaghayyer_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Gemination (Tashdid)</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Geminated /d͡ʒd͡ʒ/ Tashdid restored</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">توجه</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">/tævæd͡ʒd͡ʒoh/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">/tævæd͡ʒoh/</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>/tævæd͡ʒd͡ʒoh/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/tavajjoh_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/tavajjoh_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Full Sentence 1 (AI Pipeline)</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Continuous phonetic prosody and Ezafe</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">مدل ترنسفورمر و شبکه عصبی در پایتورچ و تنسورفلو الگوریتم گرافیم را بهینه‌سازی می‌کنند.</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">Sentence 1 (Deep Learning)</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">Baseline: Omitted Ezafe & Distorted Vowels</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>Fine-Tuned: Fluent Persian Technical Speech</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/sentence1_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/sentence1_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Full Sentence 2 (Scientific Speech)</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Tashdid on Daqiq, Motaghayyer & Tavajjoh</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">مهندسی پزشکی و محاسبه دقیق متغیرها در هوش مصنوعی و یادگیری ماشین توجه زیادی دارد.</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">Sentence 2 (Medical & AI)</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">Baseline: Missing Geminates & Glottal</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>Fine-Tuned: Exact Tashdid & Natural Flow</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/sentence2_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/sentence2_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-5 shadow-sm flex flex-col justify-between transition-colors">
+        <div>
+          <!-- Header of Card -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300">Full Sentence 3 (Data Science)</span>
+            <span class="text-[11px] text-emerald-400 font-medium">Kaggle, Deep Learning, Tokenizer loanwords</span>
+          </div>
+
+          <!-- Persian text -->
+          <div class="my-3 text-right">
+            <div class="font-fa text-2xl font-bold text-white tracking-wide" dir="rtl">پژوهشگران علم داده در کگل با فریم‌ورک دیپ‌لرنینگ و توکنایزر مسئله اتصال را حل کردند.</div>
+          </div>
+
+          <!-- IPA Comparison Box -->
+          <div class="space-y-1.5 text-xs font-mono bg-slate-950/60 p-3 rounded-lg border border-slate-800/80 my-3">
+            <div class="flex justify-between items-baseline text-slate-400">
+              <span class="text-[10px] uppercase font-sans text-slate-500">Target IPA:</span>
+              <span class="text-slate-200">Sentence 3 (Data Science)</span>
+            </div>
+            <div class="flex justify-between items-baseline text-rose-400">
+              <span class="text-[10px] uppercase font-sans text-rose-500/80">Before (Base):</span>
+              <span class="line-through opacity-80">Baseline: Mispronounced Loanwords</span>
+            </div>
+            <div class="flex justify-between items-baseline text-emerald-400 font-semibold">
+              <span class="text-[10px] uppercase font-sans text-emerald-500/80">After (FT):</span>
+              <span>Fine-Tuned: Precise Tech Loanword Cadence</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+              <span>Before Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-slate-500">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/sentence3_before_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+              <span>After Fine-Tuning</span>
+              <span class="text-[10px] font-mono text-emerald-500/60">.wav</span>
+            </div>
+            <audio controls class="w-full h-8 rounded" preload="none">
+              <source src="audio_comparison/sentence3_after_finetune.wav" type="audio/wav">
+              Your browser does not support audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION 2: 9 DIAGNOSTIC CHARTS -->
+  <section id="diagnostic-charts" class="max-w-7xl mx-auto px-4 sm:px-6 py-12 border-t border-slate-800">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h3 class="text-xl font-bold text-white tracking-tight">9 Diagnostic Charts & Visualizations (300 DPI)</h3>
+        <p class="text-xs text-slate-400 mt-1">Generated from empirical Kaggle evaluation metrics on KaamelDict (115K train, 500 test, 60 challenge words).</p>
+      </div>
+      <a href="g2p_implementation_and_finetune.ipynb" download
+         class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-slate-700 transition">
+        Download Executed Notebook (.ipynb)
+      </a>
+    </div>
+
+    <!-- Charts Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden hover:border-slate-700 transition flex flex-col justify-between">
+        <a href="figures/dataset_distribution.png" target="_blank" rel="noopener" class="block bg-slate-950 p-3 group">
+          <img src="figures/dataset_distribution.png" alt="Figure 1: Corpus EDA & Phoneme Distribution" class="w-full h-52 object-contain group-hover:scale-[1.02] transition duration-200" loading="lazy">
+        </a>
+        <div class="p-4 border-t border-slate-800">
+          <h4 class="font-bold text-sm text-white">Figure 1: Corpus EDA & Phoneme Distribution</h4>
+          <p class="text-xs text-slate-400 mt-1 leading-relaxed">Grapheme vs. phoneme length regression on 116K+ KaamelDict words, and top 20 Persian phonemes.</p>
+          <a href="figures/dataset_distribution.png" target="_blank" class="mt-3 inline-flex items-center text-xs font-medium text-indigo-400 hover:text-indigo-300 transition">
+            View Full 300 DPI Image &rarr;
+          </a>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden hover:border-slate-700 transition flex flex-col justify-between">
+        <a href="figures/loss_curve.png" target="_blank" rel="noopener" class="block bg-slate-950 p-3 group">
+          <img src="figures/loss_curve.png" alt="Figure 2: Loss Convergence & Cosine Learning Rate" class="w-full h-52 object-contain group-hover:scale-[1.02] transition duration-200" loading="lazy">
+        </a>
+        <div class="p-4 border-t border-slate-800">
+          <h4 class="font-bold text-sm text-white">Figure 2: Loss Convergence & Cosine Learning Rate</h4>
+          <p class="text-xs text-slate-400 mt-1 leading-relaxed">Cross-entropy loss trajectory on Tesla T4 GPU over 3 epochs (5,400 steps) with validation checkpoints.</p>
+          <a href="figures/loss_curve.png" target="_blank" class="mt-3 inline-flex items-center text-xs font-medium text-indigo-400 hover:text-indigo-300 transition">
+            View Full 300 DPI Image &rarr;
+          </a>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden hover:border-slate-700 transition flex flex-col justify-between">
+        <a href="figures/per_wer_metrics_comparison.png" target="_blank" rel="noopener" class="block bg-slate-950 p-3 group">
+          <img src="figures/per_wer_metrics_comparison.png" alt="Figure 3: Multi-Metric Benchmark Comparison" class="w-full h-52 object-contain group-hover:scale-[1.02] transition duration-200" loading="lazy">
+        </a>
+        <div class="p-4 border-t border-slate-800">
+          <h4 class="font-bold text-sm text-white">Figure 3: Multi-Metric Benchmark Comparison</h4>
+          <p class="text-xs text-slate-400 mt-1 leading-relaxed">Dual-panel bar chart comparing PER, WER, Word Acc, Sim, and chrF before vs. after fine-tuning.</p>
+          <a href="figures/per_wer_metrics_comparison.png" target="_blank" class="mt-3 inline-flex items-center text-xs font-medium text-indigo-400 hover:text-indigo-300 transition">
+            View Full 300 DPI Image &rarr;
+          </a>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden hover:border-slate-700 transition flex flex-col justify-between">
+        <a href="figures/category_breakdown.png" target="_blank" rel="noopener" class="block bg-slate-950 p-3 group">
+          <img src="figures/category_breakdown.png" alt="Figure 4: Stratified Linguistic Category Breakdown" class="w-full h-52 object-contain group-hover:scale-[1.02] transition duration-200" loading="lazy">
+        </a>
+        <div class="p-4 border-t border-slate-800">
+          <h4 class="font-bold text-sm text-white">Figure 4: Stratified Linguistic Category Breakdown</h4>
+          <p class="text-xs text-slate-400 mt-1 leading-relaxed">Error reduction across AI Loanwords, Short Vowels, Ezafe, and Gemination/Glottal phenomena.</p>
+          <a href="figures/category_breakdown.png" target="_blank" class="mt-3 inline-flex items-center text-xs font-medium text-indigo-400 hover:text-indigo-300 transition">
+            View Full 300 DPI Image &rarr;
+          </a>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden hover:border-slate-700 transition flex flex-col justify-between">
+        <a href="figures/edit_operations_breakdown.png" target="_blank" rel="noopener" class="block bg-slate-950 p-3 group">
+          <img src="figures/edit_operations_breakdown.png" alt="Figure 5: Levenshtein Edit Operations Breakdown" class="w-full h-52 object-contain group-hover:scale-[1.02] transition duration-200" loading="lazy">
+        </a>
+        <div class="p-4 border-t border-slate-800">
+          <h4 class="font-bold text-sm text-white">Figure 5: Levenshtein Edit Operations Breakdown</h4>
+          <p class="text-xs text-slate-400 mt-1 leading-relaxed">Substitutions (vowel errors), deletions (dropped short vowels/geminates), and insertions.</p>
+          <a href="figures/edit_operations_breakdown.png" target="_blank" class="mt-3 inline-flex items-center text-xs font-medium text-indigo-400 hover:text-indigo-300 transition">
+            View Full 300 DPI Image &rarr;
+          </a>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden hover:border-slate-700 transition flex flex-col justify-between">
+        <a href="figures/length_bucket_analysis.png" target="_blank" rel="noopener" class="block bg-slate-950 p-3 group">
+          <img src="figures/length_bucket_analysis.png" alt="Figure 6: Word Length Bucket Error Analysis" class="w-full h-52 object-contain group-hover:scale-[1.02] transition duration-200" loading="lazy">
+        </a>
+        <div class="p-4 border-t border-slate-800">
+          <h4 class="font-bold text-sm text-white">Figure 6: Word Length Bucket Error Analysis</h4>
+          <p class="text-xs text-slate-400 mt-1 leading-relaxed">Error rate progression across short (1-4), medium (5-7), long (8-10), and compound (11+) words.</p>
+          <a href="figures/length_bucket_analysis.png" target="_blank" class="mt-3 inline-flex items-center text-xs font-medium text-indigo-400 hover:text-indigo-300 transition">
+            View Full 300 DPI Image &rarr;
+          </a>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden hover:border-slate-700 transition flex flex-col justify-between">
+        <a href="figures/vowel_confusion_matrix.png" target="_blank" rel="noopener" class="block bg-slate-950 p-3 group">
+          <img src="figures/vowel_confusion_matrix.png" alt="Figure 7: Persian Vowel Confusion Matrix" class="w-full h-52 object-contain group-hover:scale-[1.02] transition duration-200" loading="lazy">
+        </a>
+        <div class="p-4 border-t border-slate-800">
+          <h4 class="font-bold text-sm text-white">Figure 7: Persian Vowel Confusion Matrix</h4>
+          <p class="text-xs text-slate-400 mt-1 leading-relaxed">Row-normalized confusion among Persian vowels /æ, e, o, ɒː, iː, uː/ before and after fine-tuning.</p>
+          <a href="figures/vowel_confusion_matrix.png" target="_blank" class="mt-3 inline-flex items-center text-xs font-medium text-indigo-400 hover:text-indigo-300 transition">
+            View Full 300 DPI Image &rarr;
+          </a>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden hover:border-slate-700 transition flex flex-col justify-between">
+        <a href="figures/word_edit_distance_reduction.png" target="_blank" rel="noopener" class="block bg-slate-950 p-3 group">
+          <img src="figures/word_edit_distance_reduction.png" alt="Figure 8: Word-Level Edit Distance Reduction" class="w-full h-52 object-contain group-hover:scale-[1.02] transition duration-200" loading="lazy">
+        </a>
+        <div class="p-4 border-t border-slate-800">
+          <h4 class="font-bold text-sm text-white">Figure 8: Word-Level Edit Distance Reduction</h4>
+          <p class="text-xs text-slate-400 mt-1 leading-relaxed">Levenshtein distance error reduction across 20 held-out Persian challenge words.</p>
+          <a href="figures/word_edit_distance_reduction.png" target="_blank" class="mt-3 inline-flex items-center text-xs font-medium text-indigo-400 hover:text-indigo-300 transition">
+            View Full 300 DPI Image &rarr;
+          </a>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden hover:border-slate-700 transition flex flex-col justify-between">
+        <a href="figures/g2p_byt5_architecture.png" target="_blank" rel="noopener" class="block bg-slate-950 p-3 group">
+          <img src="figures/g2p_byt5_architecture.png" alt="Figure 9: ByT5 Persian G2P Architecture" class="w-full h-52 object-contain group-hover:scale-[1.02] transition duration-200" loading="lazy">
+        </a>
+        <div class="p-4 border-t border-slate-800">
+          <h4 class="font-bold text-sm text-white">Figure 9: ByT5 Persian G2P Architecture</h4>
+          <p class="text-xs text-slate-400 mt-1 leading-relaxed">Raw byte sequence-to-sequence conversion pipeline from Persian orthography to IPA phonemes.</p>
+          <a href="figures/g2p_byt5_architecture.png" target="_blank" class="mt-3 inline-flex items-center text-xs font-medium text-indigo-400 hover:text-indigo-300 transition">
+            View Full 300 DPI Image &rarr;
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Minimal Footer -->
+  <footer class="border-t border-slate-800 py-8 bg-slate-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+      <div>
+        Persian G2P ByT5 Fine-Tuning &bull; KaamelDict Corpus (116K+ Words) &bull; 2026
+      </div>
+      <div class="flex items-center space-x-4">
+        <a href="g2p_implementation_and_finetune.ipynb" download class="hover:text-slate-300 transition">Download Notebook</a>
+        <a href="evaluation_metrics.json" download class="hover:text-slate-300 transition">Metrics JSON</a>
+        <a href="https://github.com/SoroushSoleimani/g2p-byt5-finetune" target="_blank" class="hover:text-slate-300 transition">GitHub Repository</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
