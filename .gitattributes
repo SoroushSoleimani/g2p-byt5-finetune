@@ -1,0 +1,4 @@
+*.html linguist-detectable=false
+*.html linguist-vendored
+audio_comparison/** linguist-vendored
+vits_audio_comparison/** linguist-vendored
