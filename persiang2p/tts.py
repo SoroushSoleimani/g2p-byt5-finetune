@@ -1,92 +1,183 @@
 """
 persiang2p.tts
-High-MOS Neural Persian Text-to-Speech (TTS) Engine.
-Couples the persiang2p phonetic & Ezafe front-end with an optimized
-VITS ONNX neural acoustic model (Piper Voice) for natural, human-like speech synthesis.
+Studio-Grade Neural Persian Text-to-Speech (TTS) Engine.
+Directly couples persiang2p high-speed phonetic & Ezafe front-end
+with Studio VITS ONNX neural acoustic models for natural, human-like Persian speech.
 """
 
 import os
-import time
-import urllib.request
+import shutil
 import numpy as np
 import soundfile as sf
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple, Union, List
 
-try:
-    from piper.voice import PiperVoice
-except ImportError:
-    PiperVoice = None
+# Supported voices
+VOICE_CONFIGS = {
+    "ganji": {
+        "name": "vits-piper-fa-ganji-adabi",
+        "description": "Studio Literary Audiobook Narrator (22.05 kHz, 8.5x Real-Time)",
+        "sample_rate": 22050,
+        "repo_subpath": "vits-piper-fa-ganji-adabi",
+        "vowel_a": "keep",
+    },
+    "smartgiti": {
+        "name": "male-SmartGitiCorp-coqui-vits",
+        "description": "Studio Corporate Male (44.1 kHz High Fidelity)",
+        "sample_rate": 44100,
+        "repo_subpath": "male-SmartGitiCorp-coqui-vits",
+        "vowel_a": "alpha",
+    },
+    "gptinformal": {
+        "name": "female-GPTInformal-coqui-vits",
+        "description": "Studio Conversational Female (24 kHz)",
+        "sample_rate": 24000,
+        "repo_subpath": "female-GPTInformal-coqui-vits",
+        "vowel_a": "alpha",
+    },
+}
 
-DEFAULT_MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", "piper")
-DEFAULT_ONNX = os.path.join(DEFAULT_MODEL_DIR, "fa_IR-amir-medium.onnx")
-DEFAULT_JSON = os.path.join(DEFAULT_MODEL_DIR, "fa_IR-amir-medium.onnx.json")
-
-HF_BASE_URL = "https://huggingface.co/rhasspy/piper-voices/resolve/main/fa/fa_IR/amir/medium/"
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MODELS_DIR = os.path.join(BASE_DIR, "models")
 
 
 class PersianTTS:
+    """
+    High-MOS Persian Neural Text-to-Speech Engine.
+    
+    Voices:
+        - 'smartgiti': Studio Corporate Voice (44.1 kHz, High Fidelity)
+        - 'ganji': Studio Literary Narrator (22.05 kHz, 8.5x Real-Time) [Recommended for narration]
+        - 'gptinformal': Studio Conversational Female (24 kHz)
+        - 'amir': Piper Baseline (Amateur Voice)
+    """
+
     def __init__(
         self,
-        onnx_path: Optional[str] = None,
-        config_path: Optional[str] = None,
-        use_gpu: bool = False
+        voice: str = "ganji",
+        model_path: Optional[str] = None,
+        tokens_path: Optional[str] = None,
+        num_threads: int = 4,
     ):
-        if PiperVoice is None:
-            raise ImportError(
-                "piper-tts is required for PersianTTS. Install it via 'pip install piper-tts'."
+        self.voice_name = voice.lower()
+        self.num_threads = num_threads
+
+        # Import PersianG2P front-end
+        from . import PersianG2P
+        self.g2p = PersianG2P()
+
+        # Handle 'amir' Piper baseline separately
+        if self.voice_name == "amir":
+            try:
+                from piper.voice import PiperVoice
+                onnx = model_path or os.path.join(MODELS_DIR, "piper", "fa_IR-amir-medium.onnx")
+                cfg = tokens_path or os.path.join(MODELS_DIR, "piper", "fa_IR-amir-medium.onnx.json")
+                self.backend = "piper"
+                self.piper_voice = PiperVoice.load(onnx, config_path=cfg)
+                self.sample_rate = self.piper_voice.config.sample_rate
+                return
+            except Exception as e:
+                print(f"Failed to load Piper voice 'amir': {e}. Falling back to 'ganji'.")
+                self.voice_name = "ganji"
+
+        if self.voice_name not in VOICE_CONFIGS:
+            valid_keys = list(VOICE_CONFIGS.keys()) + ["amir"]
+            raise ValueError(f"Unknown voice '{voice}'. Choose from: {valid_keys}")
+
+        vconfig = VOICE_CONFIGS[self.voice_name]
+        self.vowel_mode = vconfig["vowel_a"]
+
+        # Ensure model directory exists
+        v_dir = os.path.join(MODELS_DIR, vconfig["name"])
+        self.model_path = model_path or os.path.join(v_dir, "model.onnx")
+        self.tokens_path = tokens_path or os.path.join(v_dir, "tokens.txt")
+
+        self._ensure_model_files(vconfig["repo_subpath"], v_dir)
+
+        # Initialize sherpa-onnx engine
+        import sherpa_onnx
+        self.sherpa_onnx = sherpa_onnx
+        
+        cfg = sherpa_onnx.OfflineTtsConfig(
+            model=sherpa_onnx.OfflineTtsModelConfig(
+                vits=sherpa_onnx.OfflineTtsVitsModelConfig(
+                    model=self.model_path,
+                    tokens=self.tokens_path,
+                ),
+                provider="cpu",
+                num_threads=self.num_threads,
             )
+        )
+        if not cfg.validate():
+            raise RuntimeError(f"Sherpa-ONNX configuration validation failed for {self.model_path}")
 
-        self.onnx_path = onnx_path or DEFAULT_ONNX
-        self.config_path = config_path or DEFAULT_JSON
+        self.tts = sherpa_onnx.OfflineTts(cfg)
+        self.sample_rate = self.tts.sample_rate
+        self.backend = "sherpa-onnx"
 
-        # Auto-download model weights if not present locally
-        self._ensure_model_files()
+    def _ensure_model_files(self, repo_subpath: str, target_dir: str):
+        if not os.path.exists(self.model_path) or not os.path.exists(self.tokens_path):
+            os.makedirs(target_dir, exist_ok=True)
+            try:
+                from huggingface_hub import hf_hub_download
+                print(f"Downloading studio voice model '{repo_subpath}' from Hugging Face...")
+                for fname in ["model.onnx", "tokens.txt"]:
+                    f_dl = hf_hub_download(repo_id="karim23657/persian-tts-vits", filename=f"{repo_subpath}/{fname}")
+                    dest = os.path.join(target_dir, fname)
+                    shutil.copy2(f_dl, dest)
+                print("Model download completed successfully.")
+            except Exception as e:
+                raise RuntimeError(
+                    f"Model files missing at {target_dir} and automatic download failed: {e}"
+                )
 
-        # Load Piper voice with official internal espeak-ng acoustic pipeline
-        self.voice = PiperVoice.load(self.onnx_path, config_path=self.config_path, use_cuda=use_gpu)
-        self.sample_rate = self.voice.config.sample_rate
-
-        # G2P Normalizer
-        from .normalizer import PersianNormalizer
-        self.normalizer = PersianNormalizer()
-
-    def _ensure_model_files(self):
-        os.makedirs(os.path.dirname(os.path.abspath(self.onnx_path)), exist_ok=True)
-        if not os.path.exists(self.onnx_path):
-            print(f"Downloading Persian VITS ONNX model (60 MB) to {self.onnx_path}...")
-            urllib.request.urlretrieve(HF_BASE_URL + "fa_IR-amir-medium.onnx", self.onnx_path)
-            print("Download completed.")
-        if not os.path.exists(self.config_path):
-            print(f"Downloading model config to {self.config_path}...")
-            urllib.request.urlretrieve(HF_BASE_URL + "fa_IR-amir-medium.onnx.json", self.config_path)
+    def _phonemes_to_tokens(self, ipa_string: str) -> List[str]:
+        """Maps persiang2p IPA string to model vocabulary tokens."""
+        # Clean affricate ties and punctuation
+        cleaned = (
+            ipa_string.replace("\u0361", "")
+            .replace("،", ",")
+            .replace("؛", ";")
+            .replace("؟", "?")
+        )
+        if self.vowel_mode == "alpha":
+            cleaned = cleaned.replace("ɒ", "ɑ")
+        return list(cleaned)
 
     def synthesize(
         self,
         text: str,
         output_wav: Optional[str] = None,
-        speed: float = 1.0
+        speed: float = 1.0,
     ) -> Tuple[np.ndarray, int]:
         """
-        Synthesizes Persian text into a natural, studio-quality 22050 Hz audio waveform.
-        
+        Synthesizes Persian text into a high-fidelity studio waveform.
+
         Args:
-            text: Input Persian text (supports Persian diacritics / اعراب for precise vowels & Ezafe).
-            output_wav: Optional path to save the output .wav file.
-            speed: Speaking speed multiplier (1.0 = normal, 1.2 = faster, 0.8 = slower).
-            
+            text: Input Persian text.
+            output_wav: Optional path to save .wav file.
+            speed: Speaking speed multiplier (1.0 = standard).
+
         Returns:
             (audio_waveform, sample_rate)
         """
-        norm_text = self.normalizer.normalize(text, expand_numbers=True)
-        if not norm_text:
-            return np.zeros(0, dtype=np.float32), self.sample_rate
-
-        # Synthesize audio chunks via native Piper VITS acoustic model
-        chunks = list(self.voice.synthesize(norm_text))
-        if not chunks:
-            return np.zeros(0, dtype=np.float32), self.sample_rate
-
-        audio = np.concatenate([c.audio_float_array for c in chunks])
+        if self.backend == "piper":
+            # Piper text path
+            norm_text = self.g2p.normalizer.normalize(text, expand_numbers=True)
+            chunks = list(self.piper_voice.synthesize(norm_text))
+            if not chunks:
+                return np.zeros(0, dtype=np.float32), self.sample_rate
+            audio = np.concatenate([c.audio_float_array for c in chunks])
+        else:
+            # Sherpa-ONNX direct phonetic path
+            ipa = self.g2p(text)
+            tokens = self._phonemes_to_tokens(ipa)
+            
+            gen_cfg = self.sherpa_onnx.GenerationConfig()
+            gen_cfg.tokens = [tokens]
+            gen_cfg.speed = speed
+            
+            res = self.tts.generate("", config=gen_cfg)
+            audio = np.array(res.samples, dtype=np.float32)
 
         if output_wav:
             os.makedirs(os.path.dirname(os.path.abspath(output_wav)), exist_ok=True)

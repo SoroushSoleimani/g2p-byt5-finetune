@@ -24,5 +24,9 @@ CharsiuG2P/
 # OS specific files
 .DS_Store
 Thumbs.db
-models/*.onnx
-models/piper/*.onnx
+# Models and caches
+models/
+data/lexicon_cache.pkl
+vits_player_data.json
+vits_audio_comparison/studio/
+*.pkl
