@@ -1,12 +1,13 @@
 """
 persiang2p
-Fast, High-Accuracy Persian G2P (Grapheme-to-Phoneme) Engine.
+Fast, High-Accuracy Persian G2P & Neural TTS Engine.
 Combines:
 1. Persian Normalizer (character unification & number-to-words expansion)
 2. KaamelDict Lexicon (116K+ high-accuracy human-verified word-IPA pairs)
 3. Persian Morphology Engine (prefix/suffix decomposition & phonotactic recomposition)
 4. Context & Ezafe Layer (syntactic-prosodic bridge for fluent continuous speech)
 5. Fast Fallback Engine (character-level phonotactics for OOV terms)
+6. Neural VITS TTS Engine (high-MOS human-like studio speech synthesis)
 """
 
 import re
@@ -92,3 +93,12 @@ class PersianG2P:
 
     def __call__(self, text: str) -> str:
         return self.transcribe(text)
+
+
+# Import PersianTTS after PersianG2P is defined to prevent circular imports
+try:
+    from .tts import PersianTTS
+except Exception as _e:
+    PersianTTS = None
+
+__all__ = ["PersianG2P", "PersianTTS", "PersianNormalizer", "Lexicon"]

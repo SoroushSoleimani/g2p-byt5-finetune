@@ -24,3 +24,5 @@ CharsiuG2P/
 # OS specific files
 .DS_Store
 Thumbs.db
+models/*.onnx
+models/piper/*.onnx
