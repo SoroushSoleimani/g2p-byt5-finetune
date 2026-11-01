@@ -189,3 +189,8 @@ python finetune_g2p.py --train_file data/persian_g2p_train_kaamel.tsv --dev_file
 # 4. Regenerate all 9 publication-quality (300 DPI) figures
 python scripts/generate_charts.py
 ```
+
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
