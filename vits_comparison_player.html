@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مقایسه کیفیت صوت: حالت رباتیک قبلی در برابر VITS عصبی جدید</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;800;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Vazirmatn', sans-serif; }
+    .font-mono { font-family: 'Fira Code', monospace; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-4 sm:p-8 selection:bg-indigo-500 selection:text-white">
+
+  <div class="max-w-5xl mx-auto space-y-6">
+    
+    <!-- Header -->
+    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 text-center">
+      <span class="px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs font-bold">
+        ارزیابی کیفیت صوت و معیار MOS
+      </span>
+      <h1 class="text-2xl sm:text-3xl font-black text-white mt-2">
+        مقایسه شنیداری: صدای رباتیک قبلی در برابر VITS عصبی پرسرعت
+      </h1>
+      <p class="text-xs sm:text-sm text-slate-400 mt-2 max-w-2xl mx-auto leading-relaxed">
+        در این صفحه می‌توانید ۳ حالت را مستقیماً کنار هم پخش کنید: صدای پایه قبل از فاین‌تیون، صدای فاین‌تیون قبلی، و خروجی زنده سیستم جدید VITS مبتنی بر persiang2p با لحن طبیعی و استودیویی.
+      </p>
+    </div>
+
+    <!-- Comparison Cards -->
+    <div class="space-y-4">
+
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 space-y-4 hover:border-slate-700 transition">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+          <div>
+            <span class="text-xs font-bold text-indigo-400">جمله ۱ (پایپ‌لاین دیپ‌لرنینگ و هوش مصنوعی)</span>
+            <div class="text-lg font-black text-white mt-0.5">مدل ترنسفورمر و شبکه عصبی در پایتورچ و تنسورفلو الگوریتم گرافیم را بهینه‌سازی می‌کنند.</div>
+          </div>
+          <div class="text-xs text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 px-2.5 py-1 rounded-lg">
+            کسره اضافه، پیوستگی واکه‌ها و لحن محاوره‌ای اصطلاحات انگلیسی
+          </div>
+        </div>
+
+        <div class="text-[11px] font-mono text-slate-300 bg-slate-950/80 p-2.5 rounded-lg border border-slate-800" dir="ltr">
+          <span class="text-slate-500 font-sans">IPA:</span> modele tɾænsfoɾmeɾ ʔo ʃæbækeje ʔæsæbiː dæɾ pɒːjtɔːɾt͡ʃ ʔo tensoɾfloʊe ælɡoɾiːtme ɡeɾɒːfeme ɾɒːje behiːnesɒːziː miːkonænd .
+        </div>
+
+        <!-- 3 Audio Player Columns -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+          
+          <!-- Column 1: Before -->
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-rose-950/80 flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-rose-400">۱. حالت پایه قدیمی (قبل فاین‌تیون)</span>
+              <span class="text-[10px] font-mono text-rose-500/80">Base ByT5</span>
+            </div>
+            <audio controls class="w-full h-8" preload="none">
+              <source src="audio_comparison/sentence1_before_finetune.wav" type="audio/wav">
+            </audio>
+          </div>
+
+          <!-- Column 2: After Old FT -->
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-amber-950/80 flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-amber-400">۲. حالت فاین‌تیون قبلی</span>
+              <span class="text-[10px] font-mono text-amber-500/80">ByT5 FT (116K)</span>
+            </div>
+            <audio controls class="w-full h-8" preload="none">
+              <source src="audio_comparison/sentence1_after_finetune.wav" type="audio/wav">
+            </audio>
+          </div>
+
+          <!-- Column 3: New VITS Neural TTS -->
+          <div class="bg-indigo-950/30 p-3 rounded-xl border border-emerald-500/40 flex flex-col justify-between shadow-lg shadow-emerald-500/5">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-emerald-300">۳. سیستم جدید (VITS عصبی + persiang2p)</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-bold">High MOS</span>
+            </div>
+            <audio controls class="w-full h-8" preload="none">
+              <source src="vits_audio_comparison/sentence1_vits_high_mos.wav" type="audio/wav">
+            </audio>
+          </div>
+
+        </div>
+
+      </div>
+    
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 space-y-4 hover:border-slate-700 transition">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+          <div>
+            <span class="text-xs font-bold text-indigo-400">جمله ۲ (پزشکی و محاسباتی با تشدیدها)</span>
+            <div class="text-lg font-black text-white mt-0.5">مهندسی پزشکی و محاسبه دقیق متغیرها در هوش مصنوعی و یادگیری ماشین توجه زیادی دارد.</div>
+          </div>
+          <div class="text-xs text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 px-2.5 py-1 rounded-lg">
+            تلفظ تشدیدهای دقیق، متغیرها و توجه بدون افتادن در لحن رباتیک
+          </div>
+        </div>
+
+        <div class="text-[11px] font-mono text-slate-300 bg-slate-950/80 p-2.5 rounded-lg border border-slate-800" dir="ltr">
+          <span class="text-slate-500 font-sans">IPA:</span> mohændesiːje pezeʃkiː ʔo mohɒːsebeje dæɢiːɢe moteɢæjjeɾhɒː dæɾ huːʃe mæsnuːʔiː ʔo jɒːdɡiːɾiːje mɒːʃiːne tævæd͡ʒd͡ʒohje ziːjɒːdiː dɒːɾæd .
+        </div>
+
+        <!-- 3 Audio Player Columns -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+          
+          <!-- Column 1: Before -->
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-rose-950/80 flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-rose-400">۱. حالت پایه قدیمی (قبل فاین‌تیون)</span>
+              <span class="text-[10px] font-mono text-rose-500/80">Base ByT5</span>
+            </div>
+            <audio controls class="w-full h-8" preload="none">
+              <source src="audio_comparison/sentence2_before_finetune.wav" type="audio/wav">
+            </audio>
+          </div>
+
+          <!-- Column 2: After Old FT -->
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-amber-950/80 flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-amber-400">۲. حالت فاین‌تیون قبلی</span>
+              <span class="text-[10px] font-mono text-amber-500/80">ByT5 FT (116K)</span>
+            </div>
+            <audio controls class="w-full h-8" preload="none">
+              <source src="audio_comparison/sentence2_after_finetune.wav" type="audio/wav">
+            </audio>
+          </div>
+
+          <!-- Column 3: New VITS Neural TTS -->
+          <div class="bg-indigo-950/30 p-3 rounded-xl border border-emerald-500/40 flex flex-col justify-between shadow-lg shadow-emerald-500/5">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-emerald-300">۳. سیستم جدید (VITS عصبی + persiang2p)</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-bold">High MOS</span>
+            </div>
+            <audio controls class="w-full h-8" preload="none">
+              <source src="vits_audio_comparison/sentence2_vits_high_mos.wav" type="audio/wav">
+            </audio>
+          </div>
+
+        </div>
+
+      </div>
+    
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 space-y-4 hover:border-slate-700 transition">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+          <div>
+            <span class="text-xs font-bold text-indigo-400">جمله ۳ (علم داده و پردازش زبان طبیعی)</span>
+            <div class="text-lg font-black text-white mt-0.5">پژوهشگران علم داده در کگل با فریم‌ورک دیپ‌لرنینگ مسئله را حل کردند.</div>
+          </div>
+          <div class="text-xs text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 px-2.5 py-1 rounded-lg">
+            تلفظ روان کگل و دیپ‌لرنینگ با ریتم طبیعی زبان فارسی
+          </div>
+        </div>
+
+        <div class="text-[11px] font-mono text-slate-300 bg-slate-950/80 p-2.5 rounded-lg border border-slate-800" dir="ltr">
+          <span class="text-slate-500 font-sans">IPA:</span> pʒuːhʃɡɾɒːne ʔelme dɒːde dæɾ kæɡel bɒː do fɾejmvoɾke diːpleɾniːŋɡe msiːleje ɾɒːje hæl kæɾdænd .
+        </div>
+
+        <!-- 3 Audio Player Columns -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+          
+          <!-- Column 1: Before -->
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-rose-950/80 flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-rose-400">۱. حالت پایه قدیمی (قبل فاین‌تیون)</span>
+              <span class="text-[10px] font-mono text-rose-500/80">Base ByT5</span>
+            </div>
+            <audio controls class="w-full h-8" preload="none">
+              <source src="audio_comparison/sentence3_before_finetune.wav" type="audio/wav">
+            </audio>
+          </div>
+
+          <!-- Column 2: After Old FT -->
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-amber-950/80 flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-amber-400">۲. حالت فاین‌تیون قبلی</span>
+              <span class="text-[10px] font-mono text-amber-500/80">ByT5 FT (116K)</span>
+            </div>
+            <audio controls class="w-full h-8" preload="none">
+              <source src="audio_comparison/sentence3_after_finetune.wav" type="audio/wav">
+            </audio>
+          </div>
+
+          <!-- Column 3: New VITS Neural TTS -->
+          <div class="bg-indigo-950/30 p-3 rounded-xl border border-emerald-500/40 flex flex-col justify-between shadow-lg shadow-emerald-500/5">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-emerald-300">۳. سیستم جدید (VITS عصبی + persiang2p)</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-bold">High MOS</span>
+            </div>
+            <audio controls class="w-full h-8" preload="none">
+              <source src="vits_audio_comparison/sentence3_vits_high_mos.wav" type="audio/wav">
+            </audio>
+          </div>
+
+        </div>
+
+      </div>
+    
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 space-y-4 hover:border-slate-700 transition">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+          <div>
+            <span class="text-xs font-bold text-indigo-400">ترکیب اضافی ۱: مدل آماری</span>
+            <div class="text-lg font-black text-white mt-0.5">مدل آماری</div>
+          </div>
+          <div class="text-xs text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 px-2.5 py-1 rounded-lg">
+            اتصال طبیعی کسره اضافه (-e-)
+          </div>
+        </div>
+
+        <div class="text-[11px] font-mono text-slate-300 bg-slate-950/80 p-2.5 rounded-lg border border-slate-800" dir="ltr">
+          <span class="text-slate-500 font-sans">IPA:</span> modele ɒːmɒːɾiː
+        </div>
+
+        <!-- 3 Audio Player Columns -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+          
+          <!-- Column 1: Before -->
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-rose-950/80 flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-rose-400">۱. حالت پایه قدیمی (قبل فاین‌تیون)</span>
+              <span class="text-[10px] font-mono text-rose-500/80">Base ByT5</span>
+            </div>
+            <audio controls class="w-full h-8" preload="none">
+              <source src="audio_comparison/modele_amari_before_finetune.wav" type="audio/wav">
+            </audio>
+          </div>
+
+          <!-- Column 2: After Old FT -->
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-amber-950/80 flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-amber-400">۲. حالت فاین‌تیون قبلی</span>
+              <span class="text-[10px] font-mono text-amber-500/80">ByT5 FT (116K)</span>
+            </div>
+            <audio controls class="w-full h-8" preload="none">
+              <source src="audio_comparison/modele_amari_after_finetune.wav" type="audio/wav">
+            </audio>
+          </div>
+
+          <!-- Column 3: New VITS Neural TTS -->
+          <div class="bg-indigo-950/30 p-3 rounded-xl border border-emerald-500/40 flex flex-col justify-between shadow-lg shadow-emerald-500/5">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-emerald-300">۳. سیستم جدید (VITS عصبی + persiang2p)</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-bold">High MOS</span>
+            </div>
+            <audio controls class="w-full h-8" preload="none">
+              <source src="vits_audio_comparison/modele_amari_vits_high_mos.wav" type="audio/wav">
+            </audio>
+          </div>
+
+        </div>
+
+      </div>
+    
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 space-y-4 hover:border-slate-700 transition">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+          <div>
+            <span class="text-xs font-bold text-indigo-400">ترکیب اضافی ۲: شبکه عمیق</span>
+            <div class="text-lg font-black text-white mt-0.5">شبکه عمیق</div>
+          </div>
+          <div class="text-xs text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 px-2.5 py-1 rounded-lg">
+            یای میانجی (-ye-) و همزه
+          </div>
+        </div>
+
+        <div class="text-[11px] font-mono text-slate-300 bg-slate-950/80 p-2.5 rounded-lg border border-slate-800" dir="ltr">
+          <span class="text-slate-500 font-sans">IPA:</span> ʃæbækeje ʔæmiːɢ
+        </div>
+
+        <!-- 3 Audio Player Columns -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+          
+          <!-- Column 1: Before -->
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-rose-950/80 flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-rose-400">۱. حالت پایه قدیمی (قبل فاین‌تیون)</span>
+              <span class="text-[10px] font-mono text-rose-500/80">Base ByT5</span>
+            </div>
+            <audio controls class="w-full h-8" preload="none">
+              <source src="audio_comparison/shabake_amigh_before_finetune.wav" type="audio/wav">
+            </audio>
+          </div>
+
+          <!-- Column 2: After Old FT -->
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-amber-950/80 flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-amber-400">۲. حالت فاین‌تیون قبلی</span>
+              <span class="text-[10px] font-mono text-amber-500/80">ByT5 FT (116K)</span>
+            </div>
+            <audio controls class="w-full h-8" preload="none">
+              <source src="audio_comparison/shabake_amigh_after_finetune.wav" type="audio/wav">
+            </audio>
+          </div>
+
+          <!-- Column 3: New VITS Neural TTS -->
+          <div class="bg-indigo-950/30 p-3 rounded-xl border border-emerald-500/40 flex flex-col justify-between shadow-lg shadow-emerald-500/5">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-emerald-300">۳. سیستم جدید (VITS عصبی + persiang2p)</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-bold">High MOS</span>
+            </div>
+            <audio controls class="w-full h-8" preload="none">
+              <source src="vits_audio_comparison/shabake_amigh_vits_high_mos.wav" type="audio/wav">
+            </audio>
+          </div>
+
+        </div>
+
+      </div>
+    
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 space-y-4 hover:border-slate-700 transition">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+          <div>
+            <span class="text-xs font-bold text-indigo-400">تشدید: توجه</span>
+            <div class="text-lg font-black text-white mt-0.5">توجه</div>
+          </div>
+          <div class="text-xs text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 px-2.5 py-1 rounded-lg">
+            تشدید آوایی /d͡ʒd͡ʒ/
+          </div>
+        </div>
+
+        <div class="text-[11px] font-mono text-slate-300 bg-slate-950/80 p-2.5 rounded-lg border border-slate-800" dir="ltr">
+          <span class="text-slate-500 font-sans">IPA:</span> tævæd͡ʒd͡ʒoh
+        </div>
+
+        <!-- 3 Audio Player Columns -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+          
+          <!-- Column 1: Before -->
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-rose-950/80 flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-rose-400">۱. حالت پایه قدیمی (قبل فاین‌تیون)</span>
+              <span class="text-[10px] font-mono text-rose-500/80">Base ByT5</span>
+            </div>
+            <audio controls class="w-full h-8" preload="none">
+              <source src="audio_comparison/tavajjoh_before_finetune.wav" type="audio/wav">
+            </audio>
+          </div>
+
+          <!-- Column 2: After Old FT -->
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-amber-950/80 flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-amber-400">۲. حالت فاین‌تیون قبلی</span>
+              <span class="text-[10px] font-mono text-amber-500/80">ByT5 FT (116K)</span>
+            </div>
+            <audio controls class="w-full h-8" preload="none">
+              <source src="audio_comparison/tavajjoh_after_finetune.wav" type="audio/wav">
+            </audio>
+          </div>
+
+          <!-- Column 3: New VITS Neural TTS -->
+          <div class="bg-indigo-950/30 p-3 rounded-xl border border-emerald-500/40 flex flex-col justify-between shadow-lg shadow-emerald-500/5">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-emerald-300">۳. سیستم جدید (VITS عصبی + persiang2p)</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-bold">High MOS</span>
+            </div>
+            <audio controls class="w-full h-8" preload="none">
+              <source src="vits_audio_comparison/tavajjoh_vits_high_mos.wav" type="audio/wav">
+            </audio>
+          </div>
+
+        </div>
+
+      </div>
+    
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center text-xs text-slate-500 py-4">
+      پایپ‌لاین فونتیک و سنتز گفتار فارسی persiang2p &bull; موتور عصبی VITS &bull; پاییز ۲۰۲۶
+    </div>
+
+  </div>
+
+</body>
+</html>
